@@ -1,0 +1,36 @@
+<?php $this->layout('layouts/layout') ?>
+
+<?php $this->section('content') ?>
+
+<div class="container-card">
+	<div class="row card hoverable z-depth-2">
+		<div class="card-content ">
+		   <h4 class="center blue-text">Sign Up</h4>
+		   <form class="row s12" method="post" action="<?= url('/account/register') ?>">
+            <div class="row">
+               <div class="input-field col s12">
+                  <input type="text" id="name" name="Name" class="validate" required>
+                  <label for="name">Name</label>
+               </div>
+            </div>
+			   <div class="row">
+               <div class="input-field col s12">
+                  <input type="email" id="email" name="Email" class="validate" required>
+                  <label for="email">Email</label>
+               </div>
+            </div>
+            <div class="row">
+               <div class="input-field col s12">
+                  <input type="password" id="password" name="Password" class="validate" required>
+                  <label for="password">Password</label>
+               </div>
+            </div>
+		      <div class="input-field col s12 center">
+			      <button type="submit" class="btn waves-effect waves-light blue" style="width: 100%">Resgister<i class="material-icons right">send</i></button>
+		      </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+<?php $this->endSection() ?>

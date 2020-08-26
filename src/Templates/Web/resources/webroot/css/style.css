@@ -1,0 +1,89 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+body{
+  padding: 0;
+  margin: 0;
+  background: #eee;
+}
+
+.container-card {
+  margin: 35px auto;
+  width: 35%;
+}
+
+form .row {
+  margin-bottom: 0px;
+}
+
+nav ul a,
+nav .brand-logo {
+  color: #444;
+}
+
+.navbar {
+  height: 55px;
+  line-height: 55px;
+}
+
+nav .brand-logo {
+  font-size: 1.6rem;
+}
+
+p {
+  line-height: 2rem;
+}
+
+.sidenav-trigger {
+  color: #444;
+}
+
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+  font-size: inherit;
+}
+
+input[type]:not(.browser-default):focus:not([readonly]){
+  border-bottom: 1px solid #2196F3;
+  box-shadow: 0 1px 0 0 #2196F3;
+}
+
+input[type]:not(.browser-default):focus:not([readonly])+label{
+  color: #2196F3;
+}
+
+footer.page-footer {
+  margin: 0;
+}
+
+.dropdown-content {
+  top: -55px;
+  background-color: #FFFFFF;
+  margin: 0;
+  display: none;
+  min-width: 200px; /* Changed this to accomodate content width */
+  max-height: auto;
+	margin-left: -1px; /* Add this to keep dropdown in line with edge of navbar */
+  overflow: hidden; /* Changed this from overflow-y:auto; to overflow:hidden; */
+  opacity: 0;
+  position: absolute;
+  white-space: nowrap;
+  z-index: 1;
+  will-change: width, height;
+}
+
+.dropdown-content li>a, .dropdown-content li>span {
+  color: #444;
+}
+
+li span.material-icons {
+  font-size: 20px;
+  margin-right: 10px;
+}
