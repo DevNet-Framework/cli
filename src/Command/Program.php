@@ -8,11 +8,12 @@
 
 namespace Artister\Sdk\Command;
 
-use Artister\System\Console;
-use Artister\System\Cli\Command;
-use Artister\System\Cli\CommandDispatcher;
 use Artister\Sdk\Command\Handlers\RunHandler;
 use Artister\Sdk\Command\Handlers\NewHandler;
+use Artister\System\Cli\CommandDispatcher;
+use Artister\System\Cli\Command;
+use Artister\System\ConsoleColor;
+use Artister\System\Console;
 
 class Program
 {
@@ -58,7 +59,7 @@ class Program
 
         if (!$result)
         {
-            Console::foregroundColor('red');
+            Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Command not found, try --help option for more informations");
             Console::resetColor();
             Console::writeline();

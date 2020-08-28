@@ -10,8 +10,8 @@ namespace Artister\Sdk\Command\Handlers;
 
 use Artister\System\Cli\ICommandHandler;
 use Artister\System\Event\EventArgs;
+use Artister\System\ConsoleColor;
 use Artister\System\Console;
-use Artister\Sdk\Templates;
 
 class NewHandler implements ICommandHandler
 {
@@ -27,7 +27,7 @@ class NewHandler implements ICommandHandler
         }
         
         if (!$template) {
-            Console::foreGroundColor('red');
+            Console::foreGroundColor(ConsoleColor::Red);
             Console::writeline("Template not found");
             Console::writeline();
             Console::resetColor();

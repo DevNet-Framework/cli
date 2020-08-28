@@ -10,8 +10,9 @@ namespace Artister\Sdk\Templates\Web;
 
 use Artister\System\Cli\Parser\CommandParser;
 use Artister\System\Runtime\Boot\LauncherProperties;
-use Artister\System\Console;
 use Artister\System\StringBuilder;
+use Artister\System\ConsoleColor;
+use Artister\System\Console;
 
 class Program
 {
@@ -33,7 +34,7 @@ class Program
         }
 
         if (!$className) {
-            Console::foregroundColor('red');
+            Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("class Name not found, maybe forget to enter class name using the option --main");
             Console::resetColor();
             exit;
@@ -47,7 +48,7 @@ class Program
         $path = implode("/", [$rootPath, $basePath]);
 
         if (!is_dir($path)) {
-            Console::foregroundColor('red');
+            Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Invalid Path $path");
             Console::resetColor();
             exit;
@@ -76,7 +77,7 @@ class Program
             self::copyFile( __DIR__.'/resources/webroot/.htaccess', $rootPath."/webroot/web.config");
             self::copyFile( __DIR__.'/resources/webroot/.htaccess', $rootPath."/webroot/.htaccess");
 
-            Console::foregroundColor('green');
+            Console::foregroundColor(ConsoleColor::Green);
             Console::writeline("The template 'Web Application' was created successfully.");
             Console::resetColor();
         }

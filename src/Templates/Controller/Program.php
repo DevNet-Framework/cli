@@ -10,8 +10,9 @@ namespace Artister\Sdk\Templates\Controller;
 
 use Artister\System\Cli\Parser\CommandParser;
 use Artister\System\Runtime\Boot\LauncherProperties;
-use Artister\System\Console;
 use Artister\System\StringBuilder;
+use Artister\System\ConsoleColor;
+use Artister\System\Console;
 
 class Program
 {
@@ -34,7 +35,7 @@ class Program
         }
 
         if (!$className) {
-            Console::foregroundColor('red');
+            Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Controller name not found, maybe forget to enter the controller name argument");
             Console::writeline("Try \"new --help\" for more information.");
             Console::resetColor();
@@ -56,7 +57,7 @@ class Program
         $result = self::createClass($path, $namespace, $className);
 
         if ($result) {
-            Console::foregroundColor('green');
+            Console::foregroundColor(ConsoleColor::Green);
             Console::writeline("$className.php has been created in $path");
             Console::resetColor();
         }

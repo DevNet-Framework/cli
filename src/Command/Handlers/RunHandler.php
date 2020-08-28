@@ -10,6 +10,7 @@ namespace Artister\Sdk\Command\Handlers;
 
 use Artister\System\Cli\ICommandHandler;
 use Artister\System\Event\EventArgs;
+use Artister\System\ConsoleColor;
 use Artister\System\Console;
 
 class RunHandler implements ICommandHandler
@@ -47,7 +48,7 @@ class RunHandler implements ICommandHandler
         $mainClass = ucwords($mainClass, "\\");
 
         if (!class_exists($mainClass)) {
-            Console::foregroundColor('red');
+            Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Couldn't find the class $mainClass");
             Console::resetColor();
             Console::writeline();
@@ -55,7 +56,7 @@ class RunHandler implements ICommandHandler
         }
 
         if (!method_exists($mainClass, 'main')) {
-            Console::foregroundColor('red');
+            Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Couldn't find the main method to run, Ensure it exists in the class {$mainClass}");
             Console::resetColor();
             Console::writeline('');
