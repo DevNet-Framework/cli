@@ -13,7 +13,7 @@ use Artister\System\Event\EventArgs;
 use Artister\System\ConsoleColor;
 use Artister\System\Console;
 
-class NewHandler implements ICommandHandler
+class NewCommandHandler implements ICommandHandler
 {
     public function execute(object $sender, EventArgs $event) : void
     {

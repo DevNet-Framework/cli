@@ -8,8 +8,8 @@
 
 namespace Artister\Sdk\Command;
 
-use Artister\Sdk\Command\Handlers\RunHandler;
-use Artister\Sdk\Command\Handlers\NewHandler;
+use Artister\Sdk\Command\Handlers\RunCommandHandler;
+use Artister\Sdk\Command\Handlers\NewCommandHandler;
 use Artister\System\Cli\CommandDispatcher;
 use Artister\System\Cli\Command;
 use Artister\System\ConsoleColor;
@@ -26,7 +26,7 @@ class Program
             $command->setDescription('Create a new project');
             $command->addParameter('template');
             $command->addOption('--help');
-            $command->OnExecute(new NewHandler(), 'execute');
+            $command->OnExecute(new NewCommandHandler(), 'execute');
         });
 
         $dispatcher->addCommand(function(Command $command){
@@ -34,7 +34,7 @@ class Program
             $command->setDescription('Run a DevNet applicaton');
             $command->addOption('--main');
             $command->addOption('--help');
-            $command->OnExecute(new RunHandler(), 'execute');
+            $command->OnExecute(new RunCommandHandler(), 'execute');
         });
 
         self::processArgs($dispatcher, $args);
