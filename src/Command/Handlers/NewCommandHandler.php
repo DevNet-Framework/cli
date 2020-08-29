@@ -42,16 +42,16 @@ class NewCommandHandler implements ICommandHandler
 
         switch ($templateName) {
             case 'web':
-                Templates\Web\Program::main($args);
+                \Artister\Sdk\Templates\Web\Program::main($args);
                 break;
             case 'console':
-                Templates\Console\Program::main($args);
+                \Artister\Sdk\Templates\Console\Program::main($args);
                 break;
             case 'controller':
-                Templates\Controller\Program::main($args);
+                \Artister\Sdk\Templates\Controller\Program::main($args);
                 break;
             case 'entity':
-                Templates\Entity\Program::main($args);
+                \Artister\Sdk\Templates\Entity\Program::main($args);
                 break;
         }
     }
