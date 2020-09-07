@@ -2,45 +2,27 @@
 
 <?php $this->section('content') ?>
 
-<div class="container-card">
-	<div class="row card hoverable z-depth-2">
-		<div class="card-content ">
-		   <h4 class="center blue-text">Login</h4>
-		   <form class="row s12" method="post" action="<?= url('/account/login') ?>">
-            <div class="row">
-               <div class="input-field col s12">
-                  <input type="email" id="email" name="Email" class="validate" required>
-                  <label for="email">User Email</label>
-               </div>
-            </div>
-            <div class="row">
-               <div class="input-field col s12">
-                  <input type="password" id="password" name="Password" class="validate" required>
-                  <label for="password">Password</label>
-               </div>
-            </div>
-            <div class="row">
-               <div class="input-field col s12 center">
-                  <button type="submit" class="btn waves-effect waves-light blue" style="width: 100%">Login<i class="material-icons right">send</i></button>
-               </div>
-            </div>
-            <div class="row">
-               <div class="col s6">
-                  <label>
-                     <input type="checkbox" name="Remember" value="false"/>
-                     <span>Remember me</span>
-                  </label>
-               </div>
-               <div class="col s6 right-align">
-                  <a href=#>Forgot password?</a>
-               </div>
-            </div>
-         </form>
+<br>
+<div class="mx-auto p-5 shadow rounded" style="max-width: 400px">
+   <form method="post" action="<?= url('/account/login') ?>">
+      <h2 class="text-center text-info">Sign In</h2>
+      <div class="mb-3">
+         <label for="InputEmail" class="form-label">Email address</label>
+         <input type="email" class="form-control" id="InputEmail" name="Email" aria-describedby="emailHelp">
       </div>
-   </div>
-   <div class="center">
-      <a href=<?= url('/account/register') ?>>Register new account</a>
-   </div>
+      <div class="mb-3">
+         <label for="InputPassword" class="form-label">Password</label>
+         <input type="password" class="form-control" id="InputPassword" name="Password">
+      </div>
+      <div class="mb-3 form-check">
+         <input type="checkbox" class="form-check-input" id="InputRemember" name="Remember">
+         <label class="form-check-label" for="InputRemember">Remember me</label>
+      </div>
+      <button type="submit" class="btn btn-info btn-block">Sign In</button>
+      <div class="text-center mt-3">
+         Don't have an account? <a href="<?= url('/account/register') ?>">Sign Up.</a>
+      </div>
+   </form>
 </div>
 
 <?php $this->endSection() ?>

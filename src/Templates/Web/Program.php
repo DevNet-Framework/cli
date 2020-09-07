@@ -69,10 +69,8 @@ class Program
             self::copyFile( __DIR__.'/resources/Views/account/register.phtml', $rootPath."/Views/account/register.phtml");
             self::copyFile( __DIR__.'/resources/Views/layouts/layout.phtml', $rootPath."/Views/layouts/layout.phtml");
             self::copyFile( __DIR__.'/resources/Views/layouts/navbar.phtml', $rootPath."/Views/layouts/navbar.phtml");
-            self::copyFile( __DIR__.'/resources/webroot/css/materialize.min.css', $rootPath."/webroot/css/materialize.min.css");
-            self::copyFile( __DIR__.'/resources/webroot/css/style.css', $rootPath."/webroot/css/style.css");
-            self::copyFile( __DIR__.'/resources/webroot/js/materialize.min.js', $rootPath."/webroot/js/materialize.min.js");
-            self::copyFile( __DIR__.'/resources/webroot/js/script.js', $rootPath."/webroot/js/script.js");
+            self::copyFile( __DIR__.'/resources/webroot/css/bootstrap.min.css', $rootPath."/webroot/css/bootstrap.min.css");
+            self::copyFile( __DIR__.'/resources/webroot/js/bootstrap.bundle.min.js', $rootPath."/webroot/js/bootstrap.bundle.min.js");
             self::copyFile( __DIR__.'/resources/webroot/index.php', $rootPath."/webroot/index.php");
             self::copyFile( __DIR__.'/resources/webroot/.htaccess', $rootPath."/webroot/web.config");
             self::copyFile( __DIR__.'/resources/webroot/.htaccess', $rootPath."/webroot/.htaccess");

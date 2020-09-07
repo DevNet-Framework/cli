@@ -4,10 +4,8 @@
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
    <title>Atrister - DevNet Framework</title>
-   <!-- CSS  -->
-   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link href="<?= url('css/materialize.min.css') ?>" type="text/css" rel="stylesheet" media="screen,projection"/>
-   <link href="<?= url('css/style.css') ?>" type="text/css" rel="stylesheet" media="screen,projection"/>
+   <!-- styles -->
+   <link href="<?= url('css/bootstrap.min.css') ?>" type="text/css" rel="stylesheet"/>
 </head>
 <body>
    <header>
@@ -16,9 +14,7 @@
    <main>
       <?php $this->renderSection('content') ?>
    </main>
-
-  <!--  Scripts-->
-  <script src="<?= url('js/materialize.min.js') ?>"></script>
-  <script src="<?= url('js/script.js') ?>"></script>
+  <!-- scripts -->
+  <script src="<?= url('js/bootstrap.bundle.min.js') ?>"></script>
   </body>
 </html>

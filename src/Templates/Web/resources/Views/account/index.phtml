@@ -2,19 +2,13 @@
 
 <?php $this->section('content') ?>
 
-<div class="section no-pad-bot" id="index-banner">
-      <div class="container">
-         <br><br>
-         <h1 class="header center orange-text">My Account</h1>
-         <div class="row center">
-            <h5 class="header col s12 light">Hello : <?= $viewData ?></h5>
-            <h6 class="header col s12 light">Click on the Logout button to Log out.</h6>
-         </div>
-         <div class="row center">
-            <a href=<?= url('/account/logout') ?> id="download-button" class="btn-large waves-effect waves-light orange">Logout</a>
-         </div>
-         <br><br>
-      </div>
+<br><br><br>
+<div class="text-center">
+   <h1 class="text-info display-3">Hello!</h1>
+   <h5 class="text-info"><?= $viewData ?></h5>
+   <p>Click on the log out button to close your session.</p>
+   <a class="btn btn-info" href=<?= url('/account/logout') ?>>Log Out</a>
 </div>
+<br><br>
 
 <?php $this->endSection() ?>
