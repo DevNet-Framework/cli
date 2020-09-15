@@ -26,7 +26,8 @@ class AccountController extends Controller
         $user = $this->HttpContext->User;
         $emailClaim = $user->findClaim(fn($claim) => $claim->Type == "Email");
         $email = $emailClaim ? $emailClaim->Value : null;
-        return $this->view('account/index', $email);
+        $this->ViewData['Email'] = $email;
+        return $this->view('account/index');
     }
 
     public function login() : IActionResult
