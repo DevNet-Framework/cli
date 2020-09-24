@@ -5,7 +5,7 @@ namespace Application\Controllers;
 use Artister\DevNet\Mvc\Controller;
 use Artister\DevNet\Mvc\IActionResult;
 use Artister\DevNet\Mvc\Filters\AuthorizeFilter;
-use Artister\DevNet\Http\HttpContext;
+use Artister\System\Web\Http\HttpContext;
 use Artister\System\Security\ClaimsPrincipal;
 use Artister\System\Security\ClaimsIdentity;
 use Artister\System\Security\ClaimType;
