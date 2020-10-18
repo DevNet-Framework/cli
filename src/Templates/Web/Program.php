@@ -69,7 +69,7 @@ class Program
             self::copyFile( __DIR__.'/resources/Views/account/register.phtml', $rootPath."/Views/account/register.phtml");
             self::copyFile( __DIR__.'/resources/Views/layouts/layout.phtml', $rootPath."/Views/layouts/layout.phtml");
             self::copyFile( __DIR__.'/resources/Views/layouts/navbar.phtml', $rootPath."/Views/layouts/navbar.phtml");
-            self::copyFile( __DIR__.'/resources/webroot/css/style.min.css', $rootPath."/webroot/css/style.css");
+            self::copyFile( __DIR__.'/resources/webroot/css/style.css', $rootPath."/webroot/css/style.css");
             self::copyFile( __DIR__.'/resources/webroot/lib/bootstrap/css/bootstrap.min.css', $rootPath."/webroot/lib/bootstrap/css/bootstrap.min.css");
             self::copyFile( __DIR__.'/resources/webroot/js/script.js', $rootPath."/webroot/js/script.js");
             self::copyFile( __DIR__.'/resources/webroot/lib/bootstrap/js/bootstrap.bundle.min.js', $rootPath."/webroot/lib/bootstrap/js/bootstrap.bundle.min.js");
