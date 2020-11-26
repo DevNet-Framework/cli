@@ -9,10 +9,10 @@
 </head>
 <body>
    <header>
-      <?php $this->renderPartial('layouts/navbar') ?>
+      <?= $this->renderPartial('layouts/navbar') ?>
    </header>
    <main>
-      <?php $this->renderSection('content') ?>
+      <?= $this->renderBody() ?>
    </main>
   <!-- scripts -->
   <script src="<?= url('lib/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
