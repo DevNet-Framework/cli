@@ -5,7 +5,6 @@ namespace Application\Controllers;
 use Artister\DevNet\Mvc\Controller;
 use Artister\DevNet\Mvc\IActionResult;
 use Artister\DevNet\Mvc\Filters\AuthorizeFilter;
-use Artister\System\Web\Http\HttpContext;
 use Artister\System\Security\ClaimsPrincipal;
 use Artister\System\Security\ClaimsIdentity;
 use Artister\System\Security\ClaimType;
@@ -13,11 +12,8 @@ use Artister\System\Security\Claim;
 
 class AccountController extends Controller
 {
-    private HttpContext $HttpContext;
-
-    public function __construct(HttpContext $httpContext)
+    public function __construct()
     {
-        $this->HttpContext      = $httpContext;
         $this->filter('index', AuthorizeFilter::class);
     }
 
