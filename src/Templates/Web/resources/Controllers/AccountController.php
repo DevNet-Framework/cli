@@ -5,10 +5,11 @@ namespace Application\Controllers;
 use Artister\DevNet\Mvc\Controller;
 use Artister\DevNet\Mvc\IActionResult;
 use Artister\DevNet\Mvc\Filters\AuthorizeFilter;
-use Artister\System\Security\ClaimsPrincipal;
-use Artister\System\Security\ClaimsIdentity;
-use Artister\System\Security\ClaimType;
-use Artister\System\Security\Claim;
+use Artister\DevNet\Security\ClaimsPrincipal;
+use Artister\DevNet\Security\ClaimsIdentity;
+use Artister\DevNet\Security\ClaimType;
+use Artister\DevNet\Security\Claim;
+use Application\Models\UserForm;
 
 class AccountController extends Controller
 {
@@ -26,7 +27,7 @@ class AccountController extends Controller
         return $this->view('account/index');
     }
 
-    public function login() : IActionResult
+    public function login(UserForm $form) : IActionResult
     {
         $user = $this->HttpContext->User;
 
@@ -35,19 +36,17 @@ class AccountController extends Controller
             return $this->redirect('account/index');
         }
 
-        $form = $this->HttpContext->Request->Form;
-
-        if ($form->count() < 2)
+        if (!$form->isValide())
         {
             return $this->view('account/login');
         }
 
         $identity = new ClaimsIdentity('AuthenticationUser');
-        $identity->addClaim(new Claim(ClaimType::Email, $form->getValue('Email')));
+        $identity->addClaim(new Claim(ClaimType::Email, $form->Username));
         $identity->addClaim(new Claim(ClaimType::Role, 'Admin'));
         $user = new ClaimsPrincipal($identity);
         $authentication = $this->HttpContext->Authentication;
-        $authentication->SignIn($user, $form->getValue('Remember'));
+        $authentication->SignIn($user, $form->Remember);
 
         return $this->redirect('account/index');
     }
