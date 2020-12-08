@@ -13,6 +13,9 @@
     "require": {
         "php": ">=7.4.0"
     },
+    "bin": [
+        "bin/devnet"
+    ],
     "autoload": {
         "psr-4": {
             "Artister\\Sdk\\": "src/"
