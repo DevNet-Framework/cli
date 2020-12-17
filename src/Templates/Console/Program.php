@@ -6,9 +6,9 @@
  * @link        https://github.com/artister
  */
 
-namespace Artister\Sdk\Templates\Console;
+namespace Artister\Cli\Templates\Console;
 
-use Artister\System\Cli\Parser\CommandParser;
+use Artister\System\Command\Parser\CommandParser;
 use Artister\System\Runtime\Boot\LauncherProperties;
 use Artister\System\StringBuilder;
 use Artister\System\ConsoleColor;

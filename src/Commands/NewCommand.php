@@ -6,14 +6,14 @@
  * @link        https://github.com/artister
  */
 
-namespace Artister\Sdk\Command\Handlers;
+namespace Artister\Cli\Commands;
 
-use Artister\System\Cli\ICommandHandler;
+use Artister\System\Command\ICommand;
 use Artister\System\Event\EventArgs;
 use Artister\System\ConsoleColor;
 use Artister\System\Console;
 
-class NewCommandHandler implements ICommandHandler
+class NewCommand implements ICommand
 {
     public function execute(object $sender, EventArgs $event) : void
     {
@@ -40,18 +40,19 @@ class NewCommandHandler implements ICommandHandler
         $templateName = $template->Value ?? '';
         $templateName = strtolower($templateName);
 
-        switch ($templateName) {
+        switch ($templateName)
+        {
             case 'web':
-                \Artister\Sdk\Templates\Web\Program::main($args);
+                \Artister\Cli\Templates\Web\Program::main($args);
                 break;
             case 'console':
-                \Artister\Sdk\Templates\Console\Program::main($args);
+                \Artister\Cli\Templates\Console\Program::main($args);
                 break;
             case 'controller':
-                \Artister\Sdk\Templates\Controller\Program::main($args);
+                \Artister\Cli\Templates\Controller\Program::main($args);
                 break;
             case 'entity':
-                \Artister\Sdk\Templates\Entity\Program::main($args);
+                \Artister\Cli\Templates\Entity\Program::main($args);
                 break;
         }
     }

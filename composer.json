@@ -1,6 +1,6 @@
 {
-    "name": "devnet/sdk",
-    "description": "The DevNet Development Toolkit",
+    "name": "devnet/cli",
+    "description": "The DevNet Command Line Interpreter",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -18,7 +18,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Artister\\Sdk\\": "src/"
+            "Artister\\Cli\\": "src/"
         }
     }
 }

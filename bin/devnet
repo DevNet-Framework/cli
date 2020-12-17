@@ -3,7 +3,7 @@
 require __DIR__ . '/../../../../vendor/autoload.php';
 
 use Artister\System\Runtime\Boot\launcher;
-use Artister\Sdk\Command\Program;
+use Artister\Cli\Program;
 
 $launcher = launcher::getLauncher();
 

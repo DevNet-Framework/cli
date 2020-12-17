@@ -6,12 +6,12 @@
  * @link        https://github.com/artister
  */
 
-namespace Artister\Sdk\Command;
+namespace Artister\Cli;
 
-use Artister\Sdk\Command\Handlers\RunCommandHandler;
-use Artister\Sdk\Command\Handlers\NewCommandHandler;
-use Artister\System\Cli\CommandDispatcher;
-use Artister\System\Cli\Command;
+use Artister\Cli\Commands\NewCommand;
+use Artister\Cli\Commands\RunCommand;
+use Artister\System\Command\CommandDispatcher;
+use Artister\System\Command\CommandLine;
 use Artister\System\ConsoleColor;
 use Artister\System\Console;
 
@@ -21,20 +21,20 @@ class Program
     {
         $dispatcher = new CommandDispatcher();
 
-        $dispatcher->addCommand(function(Command $command){
+        $dispatcher->addCommand(function(CommandLine $command){
             $command->setName('new');
             $command->setDescription('Create a new project');
             $command->addParameter('template');
             $command->addOption('--help');
-            $command->OnExecute(new NewCommandHandler(), 'execute');
+            $command->OnExecute(new NewCommand(), 'execute');
         });
 
-        $dispatcher->addCommand(function(Command $command){
+        $dispatcher->addCommand(function(CommandLine $command){
             $command->setName('run');
             $command->setDescription('Run a DevNet applicaton');
             $command->addOption('--main');
             $command->addOption('--help');
-            $command->OnExecute(new RunCommandHandler(), 'execute');
+            $command->OnExecute(new RunCommand(), 'execute');
         });
 
         self::processArgs($dispatcher, $args);
