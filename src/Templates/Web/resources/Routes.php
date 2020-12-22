@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Artister\DevNet\Router\IRouteBuilder;
-use Artister\DevNet\Http\HttpContext;
+use Artister\Web\Router\IRouteBuilder;
+use Artister\Web\Http\HttpContext;
 use Artister\System\Process\Task;
 
 class Routes

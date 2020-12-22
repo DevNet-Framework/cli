@@ -4,9 +4,9 @@ namespace Application;
 
 use Artister\System\Configuration\IConfiguration;
 use Artister\System\Dependency\IServiceCollection;
-use Artister\DevNet\Dispatcher\IApplicationBuilder;
-use Artister\DevNet\Extensions\DependencyExtensions;
-use Artister\DevNet\Extensions\HostingExtensions;
+use Artister\Web\Dispatcher\IApplicationBuilder;
+use Artister\Web\Extensions\DependencyExtensions;
+use Artister\Web\Extensions\HostingExtensions;
 
 class Startup
 {

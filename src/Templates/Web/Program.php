@@ -95,8 +95,8 @@ class Program
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine("use Artister\DevNet\Hosting\WebHost;");
-        $context->appendLine("use Artister\DevNet\Hosting\IWebHostBuilder;");
+        $context->appendLine("use Artister\Web\Hosting\WebHost;");
+        $context->appendLine("use Artister\Web\Hosting\IWebHostBuilder;");
         $context->appendLine();
         $context->appendLine("class {$className}");
         $context->appendLine("{");
