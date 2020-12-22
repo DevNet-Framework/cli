@@ -2,8 +2,8 @@
 
 namespace Application;
 
-use Artister\DevNet\Configuration\IConfiguration;
-use Artister\DevNet\Dependency\IServiceCollection;
+use Artister\System\Configuration\IConfiguration;
+use Artister\System\Dependency\IServiceCollection;
 use Artister\DevNet\Dispatcher\IApplicationBuilder;
 use Artister\DevNet\Extensions\DependencyExtensions;
 use Artister\DevNet\Extensions\HostingExtensions;
