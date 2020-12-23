@@ -2,11 +2,10 @@
 
 require __DIR__ . '/../../../../vendor/autoload.php';
 
-use Artister\System\Runtime\Boot\launcher;
+use Artister\System\Boot\launcher;
 use Artister\Cli\Program;
 
 $launcher = launcher::getLauncher();
-
-$launcher->workspace(dirname(__DIR__, 4));
+$launcher->workspace(getcwd());
 $launcher->entryPoint(Program::class);
 $launcher->launch();

@@ -19,6 +19,11 @@ class RunCommand implements ICommand
     public function execute(object $sender, EventArgs $event) : void
     {
         // default main class name need to be inhetrited from sittings, noted to be added later
+        if (file_exists(getcwd()."/vendor/autoload.php"))
+        {
+            require getcwd()."/vendor/autoload.php";
+        }
+
         $mainClass  = "Application\Program";
         $arguments  = $event->getAttribute('arguments');
         $help       = $arguments->getOption('--help');
@@ -49,9 +54,8 @@ class RunCommand implements ICommand
 
         if (!class_exists($mainClass)) {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("Couldn't find the class $mainClass");
+            Console::writeline("Couldn't find the class {$mainClass} in ". getcwd());
             Console::resetColor();
-            Console::writeline();
             exit;
         }
 
@@ -59,7 +63,6 @@ class RunCommand implements ICommand
             Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Couldn't find the main method to run, Ensure it exists in the class {$mainClass}");
             Console::resetColor();
-            Console::writeline('');
             exit;
         }
 
