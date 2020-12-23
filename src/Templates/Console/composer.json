@@ -1,0 +1,22 @@
+{
+    "name": "devnet/console-project",
+    "description": "DevNet Console Application Project",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mohammed Moussaoui",
+            "email": "m.moussaoui@outlook.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Application\\": ""
+        }
+    },
+    "require": {
+        "php": ">=7.4.0",
+        "devnet/core": "dev-master"
+    }
+}

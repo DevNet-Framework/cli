@@ -9,7 +9,7 @@
 namespace Artister\Cli\Templates\Console;
 
 use Artister\System\Command\Parser\CommandParser;
-use Artister\System\Runtime\Boot\LauncherProperties;
+use Artister\System\Boot\LauncherProperties;
 use Artister\System\StringBuilder;
 use Artister\System\ConsoleColor;
 use Artister\System\Console;
@@ -21,7 +21,7 @@ class Program
         $rootPath   = getcwd();
         $className  = "Program";
         $basePath   = null;
-        $namespace  = LauncherProperties::getNamespace();
+        $namespace  = "Application";
 
         $parser = new CommandParser();
         $parser->addOption('--main');
@@ -55,6 +55,11 @@ class Program
         }
 
         $result = self::createClass($path, $namespace, $className);
+
+        if ($result)
+        {
+            self::copyFile( __DIR__.'/composer.json', $rootPath."/composer.json");
+        }
 
         if ($result) {
             Console::foregroundColor(ConsoleColor::Green);
@@ -92,5 +97,17 @@ class Program
         }
 
         return false;
+    }
+
+    public static function copyFile($srcfile, $dstfile)
+    {
+        $desrir =  dirname($dstfile);
+        if (!is_dir($desrir)) {
+            mkdir($desrir, 0777, true);
+        }
+
+        if (!file_exists($dstfile)) {
+            copy($srcfile, $dstfile);
+        }
     }
 }

@@ -9,7 +9,7 @@
 namespace Artister\Cli\Templates\Controller;
 
 use Artister\System\Command\Parser\CommandParser;
-use Artister\System\Runtime\Boot\LauncherProperties;
+use Artister\System\Boot\LauncherProperties;
 use Artister\System\StringBuilder;
 use Artister\System\ConsoleColor;
 use Artister\System\Console;
@@ -21,7 +21,7 @@ class Program
         $rootPath = getcwd();
         $className  = null;
         $basePath   = "Controllers";
-        $namespace = LauncherProperties::getNamespace();
+        $namespace  = "Application";
 
         $parser = new CommandParser();
         $parser->addParameter('name');
