@@ -39,21 +39,12 @@ class NewCommand implements ICommand
 
         $templateName = $template->Value ?? '';
         $templateName = strtolower($templateName);
+        $templateName = ucfirst($templateName);
 
-        switch ($templateName)
+        $mainClass = "\\Artister\\Templates\\".$templateName."\\Program";
+        if (class_exists($mainClass))
         {
-            case 'web':
-                \Artister\Cli\Templates\Web\Program::main($args);
-                break;
-            case 'console':
-                \Artister\Cli\Templates\Console\Program::main($args);
-                break;
-            case 'controller':
-                \Artister\Cli\Templates\Controller\Program::main($args);
-                break;
-            case 'entity':
-                \Artister\Cli\Templates\Entity\Program::main($args);
-                break;
+            $mainClass::main($args);
         }
     }
 

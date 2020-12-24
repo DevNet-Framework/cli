@@ -19,7 +19,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Artister\\Cli\\": "src/"
+            "Artister\\Cli\\": "src/",
+            "Artister\\Templates\\" : "src/Templates/"
         }
     }
 }
