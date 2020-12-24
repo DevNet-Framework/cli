@@ -105,9 +105,8 @@ class Program
 
     public static function showVersion() : void
     {
-        Console::writeline("DevNet SDK command line interpreter, Version 1.0.0");
-        Console::writeline("Copyright (c) Mohammed Moussaoui");
-        Console::writeline();
+        Console::writeline("DevNet command line interpreter v1.0.0");
+        Console::writeline("Copyright (c) Artister");
         exit;
     }
 }
