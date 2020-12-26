@@ -71,10 +71,7 @@ class RunCommand implements ICommand
 
     public function showHelp()
     {
-        Console::writeline("DevNet SDK command line interpreter");
-        Console::writeline();
-        Console::writeline("Usage:");
-        Console::writeline("  run [arguments] [options]");
+        Console::writeline("Usage: devnet run [options]");
         Console::writeline();
         Console::writeline("Options:");
         Console::writeline("  --help  Displays help for this command.");

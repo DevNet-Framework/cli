@@ -69,15 +69,14 @@ class Program
 
     public static function showHelp(CommandDispatcher $dispatcher) : void
     {
-        Console::writeline();
-        Console::writeline("DevNet SDK command line interpreter");
-        Console::writeline();
-        Console::writeline("Usage:");
-        Console::writeline("  command [options] [arguments]");
+        Console::writeline("DevNet command line interpreter v1.0.0");
+        Console::writeline("Usage: devnet [options]");
         Console::writeline();
         Console::writeline("Options:");
         Console::writeline("  --help      Show command line help.");
         Console::writeline("  --version   Show DevNet SDK version.");
+        Console::writeline();
+        Console::writeline("Usage: devnet [command] [arguments] [options]");
         Console::writeline();
         Console::writeline("commands:");
         $super = 0;
@@ -100,6 +99,7 @@ class Program
         }
 
         Console::writeline();
+        Console::writeline("Run 'devnet [command] --help' for more information on a command.");
         exit;
     }
 
