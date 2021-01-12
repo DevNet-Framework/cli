@@ -45,6 +45,11 @@ class Program
     {
         $argument = $args[0] ?? null;
 
+        if ($argument == '--path')
+        {
+            self::showPath();
+        }
+
         if ($argument == '--version')
         {
             self::showVersion();
@@ -74,7 +79,8 @@ class Program
         Console::writeline();
         Console::writeline("Options:");
         Console::writeline("  --help      Show command line help.");
-        Console::writeline("  --version   Show DevNet SDK version.");
+        Console::writeline("  --version   Show DevNet Cli version.");
+        Console::writeline("  --path      Show DevNet runtime path.");
         Console::writeline();
         Console::writeline("Usage: devnet [command] [arguments] [options]");
         Console::writeline();
@@ -107,6 +113,12 @@ class Program
     {
         Console::writeline("DevNet command line interpreter v1.0.0");
         Console::writeline("Copyright (c) Artister");
+        exit;
+    }
+
+    public static function showPath() : void
+    {
+        Console::writeline(dirname(__DIR__,2));
         exit;
     }
 }
