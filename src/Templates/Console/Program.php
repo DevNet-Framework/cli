@@ -57,7 +57,7 @@ class Program
 
         if ($result)
         {
-            //self::copyFile( __DIR__.'/composer.json', $rootPath."/composer.json");
+            self::copyFile( __DIR__."/project.phproj", $rootPath."/project.phproj");
         }
 
         if ($result) {
