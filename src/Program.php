@@ -32,7 +32,7 @@ class Program
         $dispatcher->addCommand(function(CommandLine $command){
             $command->setName('run');
             $command->setDescription('Run a DevNet applicaton');
-            $command->addOption('--main');
+            $command->addOption('--project');
             $command->addOption('--help');
             $command->OnExecute(new RunCommand(), 'execute');
         });

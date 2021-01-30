@@ -8,6 +8,7 @@
 
 namespace Artister\Cli\Commands;
 
+use Artister\System\Boot\LauncherProperties;
 use Artister\System\Command\ICommand;
 use Artister\System\Event\EventArgs;
 use Artister\System\ConsoleColor;
@@ -24,9 +25,10 @@ class RunCommand implements ICommand
             require getcwd()."/vendor/autoload.php";
         }
 
-        $mainClass  = "Application\Program";
-        $arguments  = $event->getAttribute('arguments');
-        $help       = $arguments->getOption('--help');
+        $workspace =  getcwd();
+        $mainClass = "Application\Program";
+        $arguments = $event->getAttribute('arguments');
+        $help      = $arguments->getOption('--help');
         
         if ($help)
         {
@@ -34,13 +36,15 @@ class RunCommand implements ICommand
         }
 
         $args = $arguments->Values;
-        $main = $arguments->getOption('--main');
+        $project = $arguments->getOption('--project');
 
-        if ($main) {
-            if ( $main->Value) {
-                $mainClass = $main->Value;
+        if ($project) {
+            if ( $project->Value) {
+                $workspace = $project->Value;
+                $loader = LauncherProperties::getLoader();
+                $loader->setWorkspace($workspace);
                 foreach ($args as $key => $arg) {
-                    if ($arg == $main->Name) {
+                    if ($arg == $project->Name) {
                         unset($args[$key]);
                         unset($args[$key+1]);
                         $args = array_values($args);
@@ -54,7 +58,7 @@ class RunCommand implements ICommand
 
         if (!class_exists($mainClass)) {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("Couldn't find the class {$mainClass} in ". getcwd());
+            Console::writeline("Couldn't find the class {$mainClass} in ". $workspace);
             Console::resetColor();
             exit;
         }
@@ -69,13 +73,13 @@ class RunCommand implements ICommand
         $mainClass::main($args);
     }
 
-    public function showHelp()
+    public function showHelp() : void
     {
         Console::writeline("Usage: devnet run [options]");
         Console::writeline();
         Console::writeline("Options:");
-        Console::writeline("  --help  Displays help for this command.");
-        Console::writeline("  --main  Main class of the program to run.");
+        Console::writeline("  --help     Displays help for this command.");
+        Console::writeline("  --project  Path to the project to run.");
         Console::writeline();
         exit;
     }
