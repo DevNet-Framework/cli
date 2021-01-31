@@ -16,17 +16,11 @@ use Artister\System\Console;
 
 class RunCommand implements ICommand
 {
-
     public function execute(object $sender, EventArgs $event) : void
     {
-        // default main class name need to be inhetrited from sittings, noted to be added later
-        if (file_exists(getcwd()."/vendor/autoload.php"))
-        {
-            require getcwd()."/vendor/autoload.php";
-        }
-
         $workspace =  getcwd();
         $mainClass = "Application\Program";
+        $loader    = LauncherProperties::getLoader();
         $arguments = $event->getAttribute('arguments');
         $help      = $arguments->getOption('--help');
         
@@ -38,13 +32,16 @@ class RunCommand implements ICommand
         $args = $arguments->Values;
         $project = $arguments->getOption('--project');
 
-        if ($project) {
-            if ( $project->Value) {
+        if ($project)
+        {
+            if ( $project->Value)
+            {
                 $workspace = $project->Value;
-                $loader = LauncherProperties::getLoader();
                 $loader->setWorkspace($workspace);
-                foreach ($args as $key => $arg) {
-                    if ($arg == $project->Name) {
+                foreach ($args as $key => $arg)
+                {
+                    if ($arg == $project->Name)
+                    {
                         unset($args[$key]);
                         unset($args[$key+1]);
                         $args = array_values($args);
@@ -54,16 +51,36 @@ class RunCommand implements ICommand
             }
         }
 
+        if (file_exists($workspace."/vendor/autoload.php"))
+        {
+            require $workspace."/vendor/autoload.php";
+        }
+
+        $projectFile = simplexml_load_file($workspace."/project.phproj");
+
+        if ($projectFile)
+        {
+            $namespace = (string)$projectFile->properties->namespace;
+            $entrypoint = (string)$projectFile->properties->entrypoint;
+            if ($namespace != "" && $entrypoint != "")
+            {
+                $mainClass = $namespace."\\".$entrypoint;
+                $loader->map($namespace, "/");
+            }
+        }
+
         $mainClass = ucwords($mainClass, "\\");
 
-        if (!class_exists($mainClass)) {
+        if (!class_exists($mainClass))
+        {
             Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Couldn't find the class {$mainClass} in ". $workspace);
             Console::resetColor();
             exit;
         }
 
-        if (!method_exists($mainClass, 'main')) {
+        if (!method_exists($mainClass, 'main'))
+        {
             Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Couldn't find the main method to run, Ensure it exists in the class {$mainClass}");
             Console::resetColor();
