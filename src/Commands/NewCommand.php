@@ -53,7 +53,8 @@ class NewCommand implements ICommand
         Console::writeline("Usage: devnet new [template] [arguments] [options]");
         Console::writeline();
         Console::writeline("Options:");
-        Console::writeline("  --help  Displays help for this command.");
+        Console::writeline("  --help     Displays help for this command.");
+        Console::writeline("  --project  Location to place the generated project.");
         Console::writeline();
         Console::writeline("templates:");
         Console::writeline("  console     Console Applicatinon");
