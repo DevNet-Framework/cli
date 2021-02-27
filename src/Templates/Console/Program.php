@@ -17,50 +17,52 @@ class Program
 {
     public static function main(array $args = [])
     {
-        $rootPath   = getcwd();
-        $className  = "Program";
-        $basePath   = null;
-        $namespace  = "Application";
+        $rootPath  = getcwd();
+        $className = "Program";
+        $basePath  = null;
+        $namespace = "Application";
 
         $parser = new CommandParser();
         $parser->addOption('--main');
-        $parser->addOption('--directory');
+        $parser->addOption('--project');
         $arguments = $parser->parse($args);
 
         $nameOption = $arguments->getOption('--main');
-        if ($nameOption) {
+        if ($nameOption)
+        {
             $className = $nameOption->Value;
         }
 
-        if (!$className) {
+        if (!$className)
+        {
             Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("class Name not found, maybe forget to enter class name using the option --main");
             Console::resetColor();
             exit;
         }
 
-        $directoryOption = $arguments->getOption('--directory');
-        if ($directoryOption) {
-            $basePath = $directoryOption->Value;
+        $projectOption = $arguments->getOption('--project');
+        if ($projectOption)
+        {
+            $basePath = $projectOption->Value;
         }
 
         $path = implode("/", [$rootPath, $basePath]);
 
-        if (!is_dir($path)) {
-            Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("Invalid Path $path");
-            Console::resetColor();
-            exit;
+        if (!is_dir($path))
+        {
+            mkdir($path, 0777, true);
         }
 
         $result = self::createClass($path, $namespace, $className);
 
         if ($result)
         {
-            self::copyFile( __DIR__."/project.phproj", $rootPath."/project.phproj");
+            self::copyFile( __DIR__."/project.phproj", $path."/project.phproj");
         }
 
-        if ($result) {
+        if ($result)
+        {
             Console::foregroundColor(ConsoleColor::Green);
             Console::writeline("The template 'Console Application' was created successfully.");
             Console::resetColor();
@@ -69,8 +71,8 @@ class Program
 
     public static function createClass($path, $namespace, $className) : bool
     {
-        $namespace  = ucwords($namespace, "\\");
-        $className  = ucfirst($className);
+        $namespace = ucwords($namespace, "\\");
+        $className = ucfirst($className);
 
         $context = new StringBuilder();
         $context->appendLine("<?php");
@@ -87,11 +89,12 @@ class Program
         $context->appendLine("    }");
         $context->append("}");
 
-        $myfile     = fopen($path."/".$className.".php", "w");
-        $size       = fwrite($myfile, $context->__toString());
-        $status     = fclose($myfile);
+        $myfile = fopen($path."/".$className.".php", "w");
+        $size   = fwrite($myfile, $context->__toString());
+        $status = fclose($myfile);
 
-        if ($size && $status) {
+        if ($size && $status)
+        {
             return true;
         }
 
@@ -100,12 +103,14 @@ class Program
 
     public static function copyFile($srcfile, $dstfile)
     {
-        $desrir =  dirname($dstfile);
-        if (!is_dir($desrir)) {
-            mkdir($desrir, 0777, true);
+        $dstdir =  dirname($dstfile);
+        if (!is_dir($dstdir))
+        {
+            mkdir($dstdir, 0777, true);
         }
 
-        if (!file_exists($dstfile)) {
+        if (!file_exists($dstfile))
+        {
             copy($srcfile, $dstfile);
         }
     }
