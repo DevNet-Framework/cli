@@ -10,6 +10,7 @@ namespace Artister\Cli\Commands;
 
 use Artister\System\Command\ICommand;
 use Artister\System\Event\EventArgs;
+use Artister\System\StringBuilder;
 use Artister\System\ConsoleColor;
 use Artister\System\Console;
 
@@ -17,35 +18,160 @@ class NewCommand implements ICommand
 {
     public function execute(object $sender, EventArgs $event) : void
     {
-        $arguments  = $event->getAttribute('arguments');
-        $template   = $arguments->getParameter('template');
-        $help       = $arguments->getOption('--help');
-        
+        $namespace = "Application";
+        $className = "Program";
+        $basePath  = null;
+        $arguments = $event->getAttribute('arguments');
+        $template  = $arguments->getParameter('template');
+        $help      = $arguments->getOption('--help');
+        $project   = $arguments->getOption('--project');
+
         if ($help)
         {
             $this->showHelp();
         }
-        
-        if (!$template) {
+
+        if (!$template || !$template->Value)
+        {
             Console::foreGroundColor(ConsoleColor::Red);
-            Console::writeline("Template not found");
-            Console::writeline();
+            Console::writeline("Template argument is missing!");
             Console::resetColor();
             exit;
         }
 
-        $args = $arguments->Values;
-        array_shift($args);
+        $project = $arguments->getOption('--project');
+        if ($project)
+        {
+            $basePath = $project->Value;
+        }
 
+        $destination  = implode("/", [getcwd(), $basePath]);
         $templateName = $template->Value ?? '';
         $templateName = strtolower($templateName);
-        $templateName = ucfirst($templateName);
+        $result       = false;
 
-        $mainClass = "\\Artister\\Templates\\".$templateName."\\Program";
-        if (class_exists($mainClass))
+        switch ($templateName)
         {
-            $mainClass::main($args);
+            case 'console':
+                $result = self::createProject($namespace, $className, $destination);
+                break;
+            case 'web':
+                $rootDir = dirname(__DIR__, 3);
+                echo "web";
+                $result  = self::copyProject($rootDir."/web-project", $destination);
+                break;
         }
+
+        if ($result)
+        {
+            Console::foregroundColor(ConsoleColor::Green);
+            Console::writeline("The {$templateName} template was created successfully.");
+            Console::resetColor();
+        }
+        else
+        {
+            Console::foregroundColor(ConsoleColor::Red);
+            Console::writeline("Somthing whent wrong! faild to create {$templateName} template.");
+            Console::resetColor();
+        }
+
+        exit;
+    }
+
+    public static function createProject(string $namespace, string $className, string $destination) : bool
+    {
+        $namespace = ucwords($namespace, "\\");
+        $className = ucfirst($className);
+
+        if (!is_dir($destination))
+        {
+            mkdir($destination, 0777, true);
+        }
+
+        $context = new StringBuilder();
+        $context->appendLine("<?php");
+        $context->appendLine();
+        $context->appendLine("namespace {$namespace};");
+        $context->appendLine();
+        $context->appendLine("use Artister\System\Console;");
+        $context->appendLine();
+        $context->appendLine("class {$className}");
+        $context->appendLine("{");
+        $context->appendLine("    public static function main(array \$args = [])");
+        $context->appendLine("    {");
+        $context->appendLine("        Console::writeline(\"Hello World!\");");
+        $context->appendLine("    }");
+        $context->append("}");
+
+        $myfile = fopen($destination."/".$className.".php", "w");
+        $size   = fwrite($myfile, $context->__toString());
+        $status = fclose($myfile);
+
+        if (!$size || !$status)
+        {
+            return false;
+        }
+
+        $context = new StringBuilder();
+        $context->appendLine("<?xml version=\"1.0\"?>");
+        $context->appendLine("<project>");
+        $context->appendLine("  <properties>");
+        $context->appendLine("    <namespace>{$namespace}</namespace>");
+        $context->appendLine("    <entrypoint>{$className}</entrypoint>");
+        $context->appendLine("  </properties>");
+        $context->appendLine("</project>");
+
+        $myfile = fopen($destination."/project.phproj", "w");
+        $size   = fwrite($myfile, $context->__toString());
+        $status = fclose($myfile);
+
+        if (!$size || !$status)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function copyProject(string $src, string $dst) : bool
+    {
+        $dir = opendir($src);
+
+        if (!$dir)
+        {
+            return false;
+        }
+        
+        if (!is_dir($dst))
+        {
+            mkdir($dst, 0777, true);
+        }
+        
+        try
+        {
+            while($file = readdir($dir))
+            {
+                if (( $file != '.' ) && ( $file != '..' ))
+                {  
+                    if (is_dir($src . '/' . $file))
+                    {
+                        self::copyProject($src . '/' . $file, $dst . '/' . $file);  
+                    }  
+                    else
+                    {  
+                        copy($src . '/' . $file, $dst . '/' . $file);  
+                    }  
+                }  
+            }
+        }
+        catch(\Throwable $th)
+        {
+            return false;
+        }
+
+        closedir($dir);
+
+        return true;
     }
 
     public function showHelp()
@@ -57,10 +183,8 @@ class NewCommand implements ICommand
         Console::writeline("  --project  Location to place the generated project.");
         Console::writeline();
         Console::writeline("templates:");
-        Console::writeline("  console     Console Applicatinon");
-        Console::writeline("  web         Web Applicatinon");
-        Console::writeline("  controller  Controller Class");
-        Console::writeline("  entity      Entity Class");
+        Console::writeline("  console     Console Applicatinon project");
+        Console::writeline("  web         Web Applicatinon project");
         Console::writeline();
         exit;
     }

@@ -8,6 +8,7 @@
 
 namespace Artister\Cli;
 
+use Artister\Cli\Commands\AddCommand;
 use Artister\Cli\Commands\NewCommand;
 use Artister\Cli\Commands\RunCommand;
 use Artister\System\Command\CommandDispatcher;
@@ -21,24 +22,35 @@ class Program
     {
         $dispatcher = new CommandDispatcher();
 
-        $dispatcher->addCommand(function(CommandLine $command){
+        $dispatcher->addCommand(function(CommandLine $command)
+        {
             $command->setName('new');
             $command->setDescription('Create a new project');
             $command->addParameter('template');
+            $command->addOption('--project');
             $command->addOption('--help');
             $command->OnExecute(new NewCommand(), 'execute');
         });
 
-        $dispatcher->addCommand(function(CommandLine $command){
+        $dispatcher->addCommand(function(CommandLine $command)
+        {
             $command->setName('run');
-            $command->setDescription('Run a DevNet applicaton');
+            $command->setDescription('Run the DevNet applicaton');
             $command->addOption('--project');
             $command->addOption('--help');
             $command->OnExecute(new RunCommand(), 'execute');
         });
 
-        self::processArgs($dispatcher, $args);
+        $dispatcher->addCommand(function(CommandLine $command)
+        {
+            $command->setName('add');
+            $command->setDescription('Add a template code file to the project');
+            $command->addOption('--project');
+            $command->addOption('--help');
+            $command->OnExecute(new AddCommand(), 'execute');
+        });
 
+        self::processArgs($dispatcher, $args);
     }
 
     public static function processArgs(CommandDispatcher $dispatcher, array $args) : void
