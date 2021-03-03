@@ -45,7 +45,9 @@ class Program
         {
             $command->setName('add');
             $command->setDescription('Add a template code file to the project');
-            $command->addOption('--project');
+            $command->addParameter('template');
+            $command->addOption('--name');
+            $command->addOption('--directory');
             $command->addOption('--help');
             $command->OnExecute(new AddCommand(), 'execute');
         });
@@ -67,26 +69,25 @@ class Program
             self::showVersion();
         }
 
-        if ($argument == '--help' || $argument == null)
+        if ($argument == '--help')
         {
             self::showHelp($dispatcher);
         }
 
         $result = $dispatcher->invoke($args);
 
-        if (!$result)
+        if (!$result || !$argument)
         {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("Command not found, try --help option for more informations");
+            Console::writeline("The specified command was not found, try 'devnet --help' for more help.");
             Console::resetColor();
-            Console::writeline();
             exit;
         }
     }
 
     public static function showHelp(CommandDispatcher $dispatcher) : void
     {
-        Console::writeline("DevNet command line interpreter v1.0.0");
+        Console::writeline("DevNet command-line interface v1.0.0");
         Console::writeline("Usage: devnet [options]");
         Console::writeline();
         Console::writeline("Options:");
@@ -123,7 +124,7 @@ class Program
 
     public static function showVersion() : void
     {
-        Console::writeline("DevNet command line interpreter v1.0.0");
+        Console::writeline("DevNet command-line interface v1.0.0");
         Console::writeline("Copyright (c) Artister");
         exit;
     }
