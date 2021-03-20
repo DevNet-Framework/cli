@@ -95,7 +95,6 @@ class AddCommand implements ICommand
         $className   = $className ?? "MyClass";
         $className   = ucfirst($className);
         $destination = implode("/", [getcwd(), $basePath]);
-        $destination = ucwords($destination, "/");
 
         $context = new StringBuilder();
         $context->appendLine("<?php");
@@ -140,7 +139,6 @@ class AddCommand implements ICommand
         $className   = $className ?? "MyController";
         $className   = ucfirst($className);
         $destination = implode("/", [getcwd(), $basePath]);
-        $destination = ucwords($destination, "/");
 
         $context = new StringBuilder();
         $context->appendLine("<?php");
@@ -184,7 +182,6 @@ class AddCommand implements ICommand
         $className   = $className ?? "MyEntity";
         $className   = ucfirst($className);
         $destination = implode("/", [getcwd(), $basePath]);
-        $destination = ucwords($destination, "/");
 
         $context = new StringBuilder();
         $context->appendLine("<?php");
