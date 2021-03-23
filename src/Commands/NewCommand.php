@@ -57,8 +57,11 @@ class NewCommand implements ICommand
                 break;
             case 'web':
                 $rootDir = dirname(__DIR__, 3);
-                echo "web";
                 $result  = self::copyProject($rootDir."/web-project", $destination);
+                break;
+            case 'mvc':
+                $rootDir = dirname(__DIR__, 3);
+                $result  = self::copyProject($rootDir."/mvc-project", $destination);
                 break;
         }
 
@@ -185,6 +188,7 @@ class NewCommand implements ICommand
         Console::writeline("templates:");
         Console::writeline("  console     Console Applicatinon project");
         Console::writeline("  web         Web Applicatinon project");
+        Console::writeline("  mvc         MVC Web Applicatinon project");
         Console::writeline();
         exit;
     }
