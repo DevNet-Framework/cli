@@ -90,6 +90,7 @@ class AddCommand implements ICommand
     public static function createClass(string $namespace, ?string $className, ?string $basePath) : bool
     {
         $namespace   = implode("\\", [$namespace, $basePath]);
+        $namespace   = str_replace("/", "\\", [$namespace, $basePath]);
         $namespace   = rtrim($namespace, "\\");
         $namespace   = ucwords($namespace, "\\");
         $className   = $className ?? "MyClass";
@@ -134,6 +135,7 @@ class AddCommand implements ICommand
     {
         $basePath    = $basePath ?? "Controllers";
         $namespace   = implode("\\", [$namespace, $basePath]);
+        $namespace   = str_replace("/", "\\", [$namespace, $basePath]);
         $namespace   = rtrim($namespace, "\\");
         $namespace   = ucwords($namespace, "\\");
         $className   = $className ?? "MyController";
@@ -177,6 +179,7 @@ class AddCommand implements ICommand
     {
         $basePath    = $basePath ?? "Models";
         $namespace   = implode("\\", [$namespace, $basePath]);
+        $namespace   = str_replace("/", "\\", [$namespace, $basePath]);
         $namespace   = rtrim($namespace, "\\");
         $namespace   = ucwords($namespace, "\\");
         $className   = $className ?? "MyEntity";
