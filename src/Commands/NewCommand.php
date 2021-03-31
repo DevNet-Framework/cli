@@ -154,7 +154,7 @@ class NewCommand implements ICommand
         {
             while($file = readdir($dir))
             {
-                if (( $file != '.' ) && ( $file != '..' ))
+                if ($file !== '.' && $file !== '..' && $file !== 'composer.json')
                 {  
                     if (is_dir($src . '/' . $file))
                     {
