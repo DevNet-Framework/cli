@@ -3,18 +3,18 @@
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
  * @license     MIT License. For full license information see LICENSE file in the project root.
- * @link        https://github.com/artister
+ * @link        https://github.com/DevNet-Framework
  */
 
-namespace Artister\Cli;
+namespace DevNet\Cli;
 
-use Artister\Cli\Commands\AddCommand;
-use Artister\Cli\Commands\NewCommand;
-use Artister\Cli\Commands\RunCommand;
-use Artister\System\Command\CommandDispatcher;
-use Artister\System\Command\CommandLine;
-use Artister\System\ConsoleColor;
-use Artister\System\Console;
+use DevNet\Cli\Commands\AddCommand;
+use DevNet\Cli\Commands\NewCommand;
+use DevNet\Cli\Commands\RunCommand;
+use DevNet\System\Command\CommandDispatcher;
+use DevNet\System\Command\CommandLine;
+use DevNet\System\ConsoleColor;
+use DevNet\System\Console;
 
 class Program
 {
@@ -125,7 +125,7 @@ class Program
     public static function showVersion() : void
     {
         Console::writeline("DevNet command-line interface v1.0.0");
-        Console::writeline("Copyright (c) Artister");
+        Console::writeline("Copyright (c) DevNet");
         exit;
     }
 

@@ -3,16 +3,16 @@
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
  * @license     MIT License. For full license information see LICENSE file in the project root.
- * @link        https://github.com/artister
+ * @link        https://github.com/DevNet-Framework
  */
 
-namespace Artister\Cli\Commands;
+namespace DevNet\Cli\Commands;
 
-use Artister\System\Command\ICommand;
-use Artister\System\Event\EventArgs;
-use Artister\System\StringBuilder;
-use Artister\System\ConsoleColor;
-use Artister\System\Console;
+use DevNet\System\Command\ICommand;
+use DevNet\System\Event\EventArgs;
+use DevNet\System\StringBuilder;
+use DevNet\System\ConsoleColor;
+use DevNet\System\Console;
 
 class NewCommand implements ICommand
 {
@@ -96,7 +96,7 @@ class NewCommand implements ICommand
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine("use Artister\System\Console;");
+        $context->appendLine("use DevNet\System\Console;");
         $context->appendLine();
         $context->appendLine("class {$className}");
         $context->appendLine("{");

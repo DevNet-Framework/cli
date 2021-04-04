@@ -3,16 +3,16 @@
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
  * @license     MIT License. For full license information see LICENSE file in the project root.
- * @link        https://github.com/artister
+ * @link        https://github.com/DevNet-Framework
  */
 
-namespace Artister\Cli\Commands;
+namespace DevNet\Cli\Commands;
 
-use Artister\System\Command\ICommand;
-use Artister\System\Event\EventArgs;
-use Artister\System\StringBuilder;
-use Artister\System\ConsoleColor;
-use Artister\System\Console;
+use DevNet\System\Command\ICommand;
+use DevNet\System\Event\EventArgs;
+use DevNet\System\StringBuilder;
+use DevNet\System\ConsoleColor;
+use DevNet\System\Console;
 
 class AddCommand implements ICommand
 {
@@ -90,7 +90,7 @@ class AddCommand implements ICommand
     public static function createClass(string $namespace, ?string $className, ?string $basePath) : bool
     {
         $namespace   = implode("\\", [$namespace, $basePath]);
-        $namespace   = str_replace("/", "\\", [$namespace, $basePath]);
+        $namespace   = str_replace("/", "\\", $namespace);
         $namespace   = rtrim($namespace, "\\");
         $namespace   = ucwords($namespace, "\\");
         $className   = $className ?? "MyClass";
@@ -102,8 +102,8 @@ class AddCommand implements ICommand
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine("use Artister\System\Collections\ArrayList;");
-        $context->appendLine("use Artister\System\Linq;");
+        $context->appendLine("use DevNet\System\Collections\ArrayList;");
+        $context->appendLine("use DevNet\System\Linq;");
         $context->appendLine();
         $context->appendLine("class {$className}");
         $context->appendLine("{");
@@ -135,7 +135,7 @@ class AddCommand implements ICommand
     {
         $basePath    = $basePath ?? "Controllers";
         $namespace   = implode("\\", [$namespace, $basePath]);
-        $namespace   = str_replace("/", "\\", [$namespace, $basePath]);
+        $namespace   = str_replace("/", "\\", $namespace);
         $namespace   = rtrim($namespace, "\\");
         $namespace   = ucwords($namespace, "\\");
         $className   = $className ?? "MyController";
@@ -147,8 +147,8 @@ class AddCommand implements ICommand
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine("use Artister\Web\Mvc\Controller;");
-        $context->appendLine("use Artister\Web\Mvc\IActionResult;");
+        $context->appendLine("use DevNet\Web\Mvc\Controller;");
+        $context->appendLine("use DevNet\Web\Mvc\IActionResult;");
         $context->appendLine();
         $context->appendLine("class {$className} extends Controller");
         $context->appendLine("{");
@@ -179,7 +179,7 @@ class AddCommand implements ICommand
     {
         $basePath    = $basePath ?? "Models";
         $namespace   = implode("\\", [$namespace, $basePath]);
-        $namespace   = str_replace("/", "\\", [$namespace, $basePath]);
+        $namespace   = str_replace("/", "\\", $namespace);
         $namespace   = rtrim($namespace, "\\");
         $namespace   = ucwords($namespace, "\\");
         $className   = $className ?? "MyEntity";
@@ -191,7 +191,7 @@ class AddCommand implements ICommand
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine("use Artister\Entity\IEntity;");
+        $context->appendLine("use DevNet\Entity\IEntity;");
         $context->appendLine();
         $context->appendLine("class {$className} implements IEntity");
         $context->appendLine("{");

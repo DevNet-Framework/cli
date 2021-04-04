@@ -3,8 +3,8 @@
 
 require __DIR__ . '/../../../../vendor/autoload.php';
 
-use Artister\System\Boot\launcher;
-use Artister\Cli\Program;
+use DevNet\System\Boot\launcher;
+use DevNet\Cli\Program;
 
 $launcher = launcher::getLauncher();
 $launcher->workspace(getcwd());
