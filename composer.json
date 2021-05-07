@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=7.4.0",
-        "devnet/core": "dev-master@dev"
+        "devnet/core": "dev-master"
     },
     "bin": [
         "bin/devnet"
