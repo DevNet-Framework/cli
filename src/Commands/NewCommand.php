@@ -8,7 +8,7 @@
 
 namespace DevNet\Cli\Commands;
 
-use DevNet\System\Command\ICommand;
+use DevNet\Cli\ICommand;
 use DevNet\System\Event\EventArgs;
 use DevNet\System\StringBuilder;
 use DevNet\System\ConsoleColor;

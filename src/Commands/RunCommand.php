@@ -8,8 +8,8 @@
 
 namespace DevNet\Cli\Commands;
 
+use DevNet\Cli\ICommand;
 use DevNet\System\Boot\LauncherProperties;
-use DevNet\System\Command\ICommand;
 use DevNet\System\Event\EventArgs;
 use DevNet\System\ConsoleColor;
 use DevNet\System\Console;
