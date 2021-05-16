@@ -56,13 +56,21 @@ class NewCommand implements ICommand
                 $result = self::createProject($namespace, $className, $destination);
                 break;
             case 'web':
-                $rootDir = dirname(__DIR__, 3);
-                $result  = self::copyProject($rootDir."/web-project", $destination);
-                break;
             case 'mvc':
                 $rootDir = dirname(__DIR__, 3);
-                $result  = self::copyProject($rootDir."/mvc-project", $destination);
+                $result  = self::copyProject($rootDir.'/'.$templateName.'-project', $destination);
+                if (!$result)
+                {
+                    $result = exec('composer create-project devnet/'.$templateName.'-project '.$basePath);
+                }
                 break;
+            default:
+                Console::foregroundColor(ConsoleColor::Red);
+                Console::writeline("The template {$templateName} does not exist!");
+                Console::resetColor();
+                exit;
+                break;
+        
         }
 
         if ($result)
@@ -104,7 +112,7 @@ class NewCommand implements ICommand
         $context->appendLine("    {");
         $context->appendLine("        Console::writeline(\"Hello World!\");");
         $context->appendLine("    }");
-        $context->append("}");
+        $context->appendLine("}");
 
         $myfile = fopen($destination."/".$className.".php", "w");
         $size   = fwrite($myfile, $context->__toString());
@@ -138,12 +146,12 @@ class NewCommand implements ICommand
 
     public static function copyProject(string $src, string $dst) : bool
     {
-        $dir = opendir($src);
-
-        if (!$dir)
+        if (!is_dir($src))
         {
             return false;
         }
+
+        $dir = opendir($src);
         
         if (!is_dir($dst))
         {
@@ -154,7 +162,7 @@ class NewCommand implements ICommand
         {
             while($file = readdir($dir))
             {
-                if ($file !== '.' && $file !== '..' && $file !== 'composer.json')
+                if ($file !== '.' && $file !== '..')
                 {  
                     if (is_dir($src . '/' . $file))
                     {
