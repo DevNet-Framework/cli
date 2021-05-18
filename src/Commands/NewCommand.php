@@ -11,8 +11,8 @@ namespace DevNet\Cli\Commands;
 use DevNet\Cli\ICommand;
 use DevNet\System\Event\EventArgs;
 use DevNet\System\StringBuilder;
-use DevNet\System\ConsoleColor;
-use DevNet\System\Console;
+use DevNet\System\IO\ConsoleColor;
+use DevNet\System\IO\Console;
 
 class NewCommand implements ICommand
 {
@@ -104,7 +104,7 @@ class NewCommand implements ICommand
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine("use DevNet\System\Console;");
+        $context->appendLine("use DevNet\System\IO\Console;");
         $context->appendLine();
         $context->appendLine("class {$className}");
         $context->appendLine("{");

@@ -11,8 +11,8 @@ namespace DevNet\Cli;
 use DevNet\Cli\Commands\AddCommand;
 use DevNet\Cli\Commands\NewCommand;
 use DevNet\Cli\Commands\RunCommand;
-use DevNet\System\ConsoleColor;
-use DevNet\System\Console;
+use DevNet\System\IO\ConsoleColor;
+use DevNet\System\IO\Console;
 
 class Program
 {
