@@ -10,7 +10,7 @@ namespace DevNet\Cli\Commands;
 
 use DevNet\Cli\ICommand;
 use DevNet\System\Event\EventArgs;
-use DevNet\System\StringBuilder;
+use DevNet\System\Text\StringBuilder;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
