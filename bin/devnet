@@ -3,7 +3,7 @@
 
 require __DIR__ . '/../../../../vendor/autoload.php';
 
-use DevNet\System\Boot\launcher;
+use DevNet\System\Runtime\launcher;
 use DevNet\Cli\Program;
 
 $launcher = launcher::getLauncher();

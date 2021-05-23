@@ -9,7 +9,7 @@
 namespace DevNet\Cli\Commands;
 
 use DevNet\Cli\ICommand;
-use DevNet\System\Boot\LauncherProperties;
+use DevNet\System\Runtime\LauncherProperties;
 use DevNet\System\Event\EventArgs;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
