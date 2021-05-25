@@ -50,27 +50,23 @@ class NewCommand implements ICommand
         $templateName = strtolower($templateName);
         $result       = false;
 
-        switch ($templateName)
+        if ($templateName == 'console')
         {
-            case 'console':
-                $result = self::createProject($namespace, $className, $destination);
-                break;
-            case 'web':
-            case 'mvc':
-                $rootDir = dirname(__DIR__, 3);
-                $result  = self::copyProject($rootDir.'/'.$templateName.'-project', $destination);
-                if (!$result)
-                {
-                    $result = exec('composer create-project devnet/'.$templateName.'-project '.$basePath);
-                }
-                break;
-            default:
+            $result = self::createProject($namespace, $className, $destination);
+        }
+        else
+        {
+            $rootDir = dirname(__DIR__, 3);
+            $source = $rootDir.'/'.$templateName.'-project';
+            if (!is_dir($source))
+            {
                 Console::foregroundColor(ConsoleColor::Red);
                 Console::writeline("The template {$templateName} does not exist!");
                 Console::resetColor();
                 exit;
-                break;
-        
+            }
+
+            $result  = self::copyProject($source, $destination);
         }
 
         if ($result)
@@ -145,21 +141,15 @@ class NewCommand implements ICommand
     }
 
     public static function copyProject(string $src, string $dst) : bool
-    {
-        if (!is_dir($src))
-        {
-            return false;
-        }
-
-        $dir = opendir($src);
-        
-        if (!is_dir($dst))
-        {
-            mkdir($dst, 0777, true);
-        }
-        
+    {   
         try
         {
+            $dir = opendir($src);
+            if (!is_dir($dst))
+            {
+                mkdir($dst, 0777, true);
+            }
+
             while($file = readdir($dir))
             {
                 if ($file !== '.' && $file !== '..')
