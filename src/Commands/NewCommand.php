@@ -57,7 +57,7 @@ class NewCommand implements ICommand
         else
         {
             $rootDir = dirname(__DIR__, 3);
-            $source = $rootDir.'/'.$templateName.'-project';
+            $source  = $rootDir.'/'.$templateName.'-project';
             if (!is_dir($source))
             {
                 Console::foregroundColor(ConsoleColor::Red);
@@ -184,9 +184,43 @@ class NewCommand implements ICommand
         Console::writeline("  --project  Location to place the generated project.");
         Console::writeline();
         Console::writeline("templates:");
-        Console::writeline("  console     Console Applicatinon project");
-        Console::writeline("  web         Web Applicatinon project");
-        Console::writeline("  mvc         MVC Web Applicatinon project");
+
+        $root       = dirname(__DIR__, 3);
+        $list       = scandir($root);
+        $metadata[] = ['name' => 'console', 'description' => 'Console Applicatinon project'];
+        $maxLenth   = 7; // the initial max length is the length the word "console"
+
+        foreach ($list as $dir)
+        {
+            if ($dir == str_ends_with($dir, '-project'))
+            {
+                if (file_exists($root.'/'.$dir.'/composer.json'))
+                {
+                    $name    = strstr($dir, '-', true);
+                    $json    = file_get_contents($root.'/'.$dir.'/composer.json');
+                    $project = json_decode($json);
+
+                    $lenth   = strlen($name);
+                    if ($lenth > $maxLenth)
+                    {
+                        $maxLenth = $lenth;
+                    }
+
+                    $metadata[] = ['name' => $name, 'description' => $project->description];
+
+                }
+            }
+        }
+
+        //print template description with auto-alignment
+        foreach ($metadata as $template)
+        {
+            $lenth = strlen($template['name']);
+            $steps = $maxLenth - $lenth + 4;
+            $space = str_repeat(" ", $steps);
+            Console::writeline("  {$template['name']}{$space}{$template['description']}");
+        }
+        
         Console::writeline();
         exit;
     }
