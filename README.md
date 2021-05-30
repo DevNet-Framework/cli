@@ -17,11 +17,13 @@ so in the terminal type the following command:
 composer global config minimum-stability dev
 ```
 
-To install DevNet framework globally, run the following command in the terminal:
+To install DevNet Cli globally, run the following command in the terminal:
 
 ```bash
 composer global require devnet/cli
 ```
+This will run a minimal installation of DevNet Framework that allows you to create a console app only, but you can add other DevNet packages later, like devnet/web package to be able to create a web app.
+
 >**Note:** For Linux users, do not forget to add composer **bin** into the System Environment Variables, like the following line:
 `echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' >> ~/.bashrc`
 
@@ -39,7 +41,7 @@ This will create a simple console application that output a "Hello World" messag
 
 namespace Application;
 
-use DevNet\System\Console;
+use DevNet\System\IO\Console;
 
 class Program
 {
