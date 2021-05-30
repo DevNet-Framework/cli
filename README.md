@@ -12,16 +12,20 @@ This dependency is a part of **DevNet Framework**, a command-line Interface tool
 First we need to config composer global minimum-stability to development, because DevNet is still in development
 
 so in the terminal type the following command:
-
 ```bash
 composer global config minimum-stability dev
 ```
 
-To install DevNet Cli globally, run the following command in the terminal:
+Then force composer to prefer the stable version if that possible, like so:
+```bash
+composer global config prefer-stable true
+```
 
+To install DevNet Cli globally, run the following command in the terminal:
 ```bash
 composer global require devnet/cli
 ```
+
 This will run a minimal installation of DevNet Framework that allows you to create a console app only, but you can add other DevNet packages later, like devnet/web package to be able to create a web app.
 
 >**Note:** For Linux users, do not forget to add composer **bin** into the System Environment Variables, like the following line:
