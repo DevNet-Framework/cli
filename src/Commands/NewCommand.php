@@ -57,7 +57,7 @@ class NewCommand implements ICommand
         else
         {
             $rootDir = dirname(__DIR__, 3);
-            $source  = $rootDir.'/'.$templateName.'-project';
+            $source  = $rootDir.'/templates/'.$templateName.'-project';
             if (!is_dir($source))
             {
                 Console::foregroundColor(ConsoleColor::Red);
@@ -186,7 +186,7 @@ class NewCommand implements ICommand
         Console::writeline("templates:");
 
         $root       = dirname(__DIR__, 3);
-        $list       = scandir($root);
+        $list       = scandir($root.'/templates');
         $metadata[] = ['name' => 'console', 'description' => 'Console Applicatinon project'];
         $maxLenth   = 7; // the initial max length is the length the word "console"
 
@@ -194,10 +194,10 @@ class NewCommand implements ICommand
         {
             if ($dir == str_ends_with($dir, '-project'))
             {
-                if (file_exists($root.'/'.$dir.'/composer.json'))
+                if (file_exists($root.'/templates/'.$dir.'/composer.json'))
                 {
                     $name    = strstr($dir, '-', true);
-                    $json    = file_get_contents($root.'/'.$dir.'/composer.json');
+                    $json    = file_get_contents($root.'/templates/'.$dir.'/composer.json');
                     $project = json_decode($json);
 
                     $lenth   = strlen($name);
