@@ -185,8 +185,14 @@ class NewCommand implements ICommand
         Console::writeline();
         Console::writeline("templates:");
 
-        $root       = dirname(__DIR__, 3);
-        $list       = scandir($root.'/templates');
+        $root = dirname(__DIR__, 3);
+        $list = [];
+
+        if (is_dir($root.'/templates'))
+        {
+            $list = scandir($root.'/templates');
+        }
+        
         $metadata[] = ['name' => 'console', 'description' => 'Console Applicatinon project'];
         $maxLenth   = 7; // the initial max length is the length the word "console"
 
