@@ -18,7 +18,7 @@ class AddCommand implements ICommand
 {
     public function execute(object $sender, EventArgs $event) : void
     {
-        $namespace = "Application";
+        $namespace = 'Application';
         $className = null;
         $basePath  = null;
         $arguments = $event->getAttribute('arguments');
@@ -34,7 +34,7 @@ class AddCommand implements ICommand
         if (!$template || !$template->Value)
         {
             Console::foreGroundColor(ConsoleColor::Red);
-            Console::writeline("Template argument is missing!");
+            Console::writeline('Template argument is missing!');
             Console::resetColor();
             exit;
         }
@@ -89,29 +89,29 @@ class AddCommand implements ICommand
 
     public static function createClass(string $namespace, ?string $className, ?string $basePath) : bool
     {
-        $namespace   = implode("\\", [$namespace, $basePath]);
-        $namespace   = str_replace("/", "\\", $namespace);
-        $namespace   = rtrim($namespace, "\\");
-        $namespace   = ucwords($namespace, "\\");
-        $className   = $className ?? "MyClass";
+        $namespace   = implode('\\', [$namespace, $basePath]);
+        $namespace   = str_replace('/', '\\', $namespace);
+        $namespace   = rtrim($namespace, '\\');
+        $namespace   = ucwords($namespace, '\\');
+        $className   = $className ?? 'MyClass';
         $className   = ucfirst($className);
-        $destination = implode("/", [getcwd(), $basePath]);
+        $destination = implode('/', [getcwd(), $basePath]);
 
         $context = new StringBuilder();
-        $context->appendLine("<?php");
+        $context->appendLine('<?php');
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine("use DevNet\System\Collections\ArrayList;");
-        $context->appendLine("use DevNet\System\Linq;");
+        $context->appendLine('use DevNet\System\Collections\ArrayList;');
+        $context->appendLine('use DevNet\System\Linq;');
         $context->appendLine();
         $context->appendLine("class {$className}");
-        $context->appendLine("{");
-        $context->appendLine("    public function __construct()");
-        $context->appendLine("    {");
-        $context->appendLine("        // code...");
-        $context->appendLine("    }");
-        $context->append("}");
+        $context->appendLine('{');
+        $context->appendLine('    public function __construct()');
+        $context->appendLine('    {');
+        $context->appendLine('        // code...');
+        $context->appendLine('    }');
+        $context->append('}');
         $context->appendLine();
 
         if (!is_dir($destination))
@@ -119,7 +119,7 @@ class AddCommand implements ICommand
             mkdir($destination, 0777, true);
         }
 
-        $myfile = fopen($destination."/".$className.".php", "w");
+        $myfile = fopen($destination.'/'.$className.'.php', 'w');
         $size   = fwrite($myfile, $context->__toString());
         $status = fclose($myfile);
 
@@ -133,30 +133,30 @@ class AddCommand implements ICommand
 
     public static function createController(string $namespace, ?string $className, ?string $basePath) : bool
     {
-        $basePath    = $basePath ?? "Controllers";
-        $namespace   = implode("\\", [$namespace, $basePath]);
-        $namespace   = str_replace("/", "\\", $namespace);
-        $namespace   = rtrim($namespace, "\\");
-        $namespace   = ucwords($namespace, "\\");
-        $className   = $className ?? "MyController";
+        $basePath    = $basePath ?? 'Controllers';
+        $namespace   = implode('\\', [$namespace, $basePath]);
+        $namespace   = str_replace('/', '\\', $namespace);
+        $namespace   = rtrim($namespace, '\\');
+        $namespace   = ucwords($namespace, '\\');
+        $className   = $className ?? 'MyController';
         $className   = ucfirst($className);
-        $destination = implode("/", [getcwd(), $basePath]);
+        $destination = implode('/', [getcwd(), $basePath]);
 
         $context = new StringBuilder();
-        $context->appendLine("<?php");
+        $context->appendLine('<?php');
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine("use DevNet\Web\Mvc\Controller;");
-        $context->appendLine("use DevNet\Web\Mvc\IActionResult;");
+        $context->appendLine('use DevNet\Web\Mvc\Controller;');
+        $context->appendLine('use DevNet\Web\Mvc\IActionResult;');
         $context->appendLine();
         $context->appendLine("class {$className} extends Controller");
-        $context->appendLine("{");
-        $context->appendLine("    public function index() : IActionResult");
-        $context->appendLine("    {");
-        $context->appendLine("        return \$this->view();");
-        $context->appendLine("    }");
-        $context->append("}");
+        $context->appendLine('{');
+        $context->appendLine('    public function index() : IActionResult');
+        $context->appendLine('    {');
+        $context->appendLine('        return $this->view();');
+        $context->appendLine('    }');
+        $context->append('}');
         $context->appendLine();
 
         if (!is_dir($destination))
@@ -164,7 +164,7 @@ class AddCommand implements ICommand
             mkdir($destination, 0777, true);
         }
 
-        $myfile = fopen($destination."/".$className.".php", "w");
+        $myfile = fopen($destination.'/'.$className.'.php', 'w');
         $size   = fwrite($myfile, $context->__toString());
         $status = fclose($myfile);
 
@@ -177,36 +177,40 @@ class AddCommand implements ICommand
 
     public static function createEntity(string $namespace, ?string $className, ?string $basePath) : bool
     {
-        $basePath    = $basePath ?? "Models";
-        $namespace   = implode("\\", [$namespace, $basePath]);
-        $namespace   = str_replace("/", "\\", $namespace);
-        $namespace   = rtrim($namespace, "\\");
-        $namespace   = ucwords($namespace, "\\");
-        $className   = $className ?? "MyEntity";
+        $basePath    = $basePath ?? 'Models';
+        $namespace   = implode('\\', [$namespace, $basePath]);
+        $namespace   = str_replace('/', '\\', $namespace);
+        $namespace   = rtrim($namespace, '\\');
+        $namespace   = ucwords($namespace, '\\');
+        $className   = $className ?? 'MyEntity';
         $className   = ucfirst($className);
-        $destination = implode("/", [getcwd(), $basePath]);
+        $destination = implode('/', [getcwd(), $basePath]);
 
         $context = new StringBuilder();
-        $context->appendLine("<?php");
+        $context->appendLine('<?php');
         $context->appendLine();
-        $context->appendLine("namespace {$namespace};");
+        $context->appendLine('namespace {$namespace};');
         $context->appendLine();
-        $context->appendLine("use DevNet\Entity\IEntity;");
+        $context->appendLine('use DevNet\Entity\IEntity;');
         $context->appendLine();
-        $context->appendLine("class {$className} implements IEntity");
-        $context->appendLine("{");
-        $context->appendLine("    private int \$Id;");
+        $context->appendLine('class {$className} implements IEntity');
+        $context->appendLine('{');
+        $context->appendLine('    private int $Id;');
         $context->appendLine();
-        $context->appendLine("    public function __get(string \$name)");
-        $context->appendLine("    {");
-        $context->appendLine("        return \$this->\$name;");
-        $context->appendLine("    }");
+        $context->appendLine('    public function __get(string $name)');
+        $context->appendLine('    {');
+        $context->appendLine('        return $this->$name;');
+        $context->appendLine('    }');
         $context->appendLine();
-        $context->appendLine("    public function __set(string \$name, \$value)");
-        $context->appendLine("    {");
-        $context->appendLine("        \$this->\$name = \$value;");
-        $context->appendLine("    }");
-        $context->append("}");
+        $context->appendLine('    public function __set(string $name, $value)');
+        $context->appendLine('    {');
+        $context->appendLine('        if (!property_exists($this, $name))');
+        $context->appendLine('        {');
+        $context->appendLine('            throw new \Exception("The property {$name} doesn\'t exist.\");');
+        $context->appendLine('        }');
+        $context->appendLine('        $this->$name = $value;');
+        $context->appendLine('    }');
+        $context->append('}');
         $context->appendLine();
 
         if (!is_dir($destination))
@@ -214,7 +218,7 @@ class AddCommand implements ICommand
             mkdir($destination, 0777, true);
         }
 
-        $myfile = fopen($destination."/".$className.".php", "w");
+        $myfile = fopen($destination.'/'.$className.'.php', 'w');
         $size   = fwrite($myfile, $context->__toString());
         $status = fclose($myfile);
 
@@ -227,16 +231,16 @@ class AddCommand implements ICommand
 
     public function showHelp()
     {
-        Console::writeline("Usage: devnet new [template] [arguments] [options]");
+        Console::writeline('Usage: devnet new [template] [arguments] [options]');
         Console::writeline();
-        Console::writeline("Options:");
-        Console::writeline("  --help     Displays help for this command.");
-        Console::writeline("  --project  Location to place the generated project.");
+        Console::writeline('Options:');
+        Console::writeline('  --help     Displays help for this command.');
+        Console::writeline('  --project  Location to place the generated project.');
         Console::writeline();
-        Console::writeline("templates:");
-        Console::writeline("  class       Simple Class");
-        Console::writeline("  controller  Controller Class");
-        Console::writeline("  entity      Entity Class");
+        Console::writeline('templates:');
+        Console::writeline('  class       Simple Class');
+        Console::writeline('  controller  Controller Class');
+        Console::writeline('  entity      Entity Class');
         Console::writeline();
         exit;
     }
