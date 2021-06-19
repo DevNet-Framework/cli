@@ -147,16 +147,16 @@ class AddCommand implements ICommand
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine('use DevNet\Web\Mvc\Controller;');
-        $context->appendLine('use DevNet\Web\Mvc\IActionResult;');
+        $context->appendLine('use DevNet\Core\Controller\AbstractController;');
+        $context->appendLine('use DevNet\Core\Controller\IActionResult;');
         $context->appendLine();
-        $context->appendLine("class {$className} extends Controller");
+        $context->appendLine("class {$className} extends AbstractController");
         $context->appendLine('{');
         $context->appendLine('    public function index() : IActionResult');
         $context->appendLine('    {');
         $context->appendLine('        return $this->view();');
         $context->appendLine('    }');
-        $context->append('}');
+        $context->appendLine('}');
         $context->appendLine();
 
         if (!is_dir($destination))
@@ -210,7 +210,7 @@ class AddCommand implements ICommand
         $context->appendLine('        }');
         $context->appendLine('        $this->$name = $value;');
         $context->appendLine('    }');
-        $context->append('}');
+        $context->appendLine('}');
         $context->appendLine();
 
         if (!is_dir($destination))
