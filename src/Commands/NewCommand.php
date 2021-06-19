@@ -57,7 +57,7 @@ class NewCommand implements ICommand
         else
         {
             $rootDir = dirname(__DIR__, 3);
-            $source  = $rootDir.'/templates/'.$templateName.'-project';
+            $source  = $rootDir.'/templates/'.$templateName;
             if (!is_dir($source))
             {
                 Console::foregroundColor(ConsoleColor::Red);
@@ -198,23 +198,19 @@ class NewCommand implements ICommand
 
         foreach ($list as $dir)
         {
-            if ($dir == str_ends_with($dir, '-project'))
+            if (file_exists($root.'/templates/'.$dir.'/composer.json'))
             {
-                if (file_exists($root.'/templates/'.$dir.'/composer.json'))
+                $name    = strstr($dir, '-', true);
+                $json    = file_get_contents($root.'/templates/'.$dir.'/composer.json');
+                $project = json_decode($json);
+
+                $lenth   = strlen($name);
+                if ($lenth > $maxLenth)
                 {
-                    $name    = strstr($dir, '-', true);
-                    $json    = file_get_contents($root.'/templates/'.$dir.'/composer.json');
-                    $project = json_decode($json);
-
-                    $lenth   = strlen($name);
-                    if ($lenth > $maxLenth)
-                    {
-                        $maxLenth = $lenth;
-                    }
-
-                    $metadata[] = ['name' => $name, 'description' => $project->description];
-
+                    $maxLenth = $lenth;
                 }
+
+                $metadata[] = ['name' => $name, 'description' => $project->description];
             }
         }
 
