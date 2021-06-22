@@ -152,7 +152,7 @@ class NewCommand implements ICommand
 
             while($file = readdir($dir))
             {
-                if ($file !== '.' && $file !== '..')
+                if ($file !== '.' && $file !== '..' && $file !== '.git')
                 {  
                     if (is_dir($src . '/' . $file))
                     {
