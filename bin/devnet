@@ -4,9 +4,9 @@
 require __DIR__ . '/../../../../vendor/autoload.php';
 
 use DevNet\System\Runtime\launcher;
-use DevNet\Cli\Program;
 
 $launcher = launcher::getLauncher();
 $launcher->workspace(getcwd());
-$launcher->entryPoint(Program::class);
+$launcher->namespace('DevNet\\Cli');
+$launcher->entryPoint('Program');
 $launcher->launch();
