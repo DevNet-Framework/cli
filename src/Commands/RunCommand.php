@@ -51,21 +51,29 @@ class RunCommand implements ICommand
             }
         }
 
-        if (file_exists($workspace."/vendor/autoload.php"))
-        {
-            require $workspace."/vendor/autoload.php";
-        }
-
         $projectFile = simplexml_load_file($workspace."/project.phproj");
 
         if ($projectFile)
         {
-            $namespace = (string)$projectFile->properties->namespace;
-            $entrypoint = (string)$projectFile->properties->entrypoint;
-            if ($namespace != "" && $entrypoint != "")
+            $namespace  = $projectFile->properties->namespace;
+            $entrypoint = $projectFile->properties->entrypoint;
+            $packages   = $projectFile->dependencies->package ?? [];
+
+            if ($namespace && $entrypoint)
             {
-                $mainClass = $namespace."\\".$entrypoint;
+                $namespace  = (string)$namespace;
+                $entrypoint = (string)$entrypoint;
+                $mainClass  = $namespace."\\".$entrypoint;
                 $loader->map($namespace, "/");
+            }
+
+            foreach ($packages as $package)
+            {
+                $include = (string)$package->attributes()->include;
+                if (file_exists($workspace.'/'.$include))
+                {
+                    require $workspace.'/'.$include;
+                }
             }
         }
 
