@@ -79,13 +79,19 @@ templates:
 The help shows a usage of the `new` command followed by the name of the project template that you want to create, and followed by options and arguments, and shows a list of options that you can use with the command and a list of templates that you can choose from to create your project.
 
 ### Add more Templates
-By default DevNet Cli include **console** template only, and in order to create a **web** project like **web api** and **mvc** project, you have to install DevNet addons templates, so in your terminal run the following command:
+By default DevNet Cli include **console** template only, and in order to create a **web** project like **web api** and **mvc** project, you have to install DevNet addons templates  
 
+To add empty web template to your system, run the following command in your terminal:
 ```
-composer global require devnet/templates
+composer global require devnet/web
 ```
 
-Now when we check again the list of the responsible templates, we find that we can create more than just a console project.
+To add mvc web template to your system, run the following command in your terminal:
+```
+composer global require devnet/mvc
+```
+
+Now when we check again the list of the available templates, we find that we can create more than just a console project.
 
 ```
 devnet new --help
@@ -100,9 +106,9 @@ Options:
   --project  Location to place the generated project.
 
 templates:
-  console    Console Applicatinon project
-  mvc        DevNet MVC Web Application Project
-  web        DevNet Web Application Project
+  console    Console Application
+  mvc        DevNet Web Application (Model-View-Controller)
+  web        DevNet Web Application (Empty)
 ```
 
 ### Create new Project
