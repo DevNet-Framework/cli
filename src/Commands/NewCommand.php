@@ -196,12 +196,11 @@ class NewCommand implements ICommand
         $metadata[] = ['name' => 'console', 'description' => 'Console Applicatinon project'];
         $maxLenth   = 7; // the initial max length is the length the word "console"
 
-        foreach ($list as $dir)
+        foreach ($list as $name)
         {
-            if (file_exists($root.'/templates/'.$dir.'/composer.json'))
+            if (file_exists($root.'/templates/'.$name.'/composer.json'))
             {
-                $name    = strstr($dir, '-', true);
-                $json    = file_get_contents($root.'/templates/'.$dir.'/composer.json');
+                $json    = file_get_contents($root.'/templates/'.$name.'/composer.json');
                 $project = json_decode($json);
 
                 $lenth   = strlen($name);
