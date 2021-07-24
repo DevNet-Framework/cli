@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+
 /**
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
@@ -12,5 +13,5 @@ use DevNet\System\Event\EventArgs;
 
 interface ICommand
 {
-    public function execute(object $sender,  EventArgs $event) : void;
+    public function execute(object $sender,  EventArgs $event): void;
 }

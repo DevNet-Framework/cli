@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+
 /**
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
@@ -26,12 +27,12 @@ class CommandArguments
         return $this->$name;
     }
 
-    public function getParameter(string $name) : ?CommandParameter
+    public function getParameter(string $name): ?CommandParameter
     {
         return $this->Parameters[strtolower($name)] ?? null;
     }
 
-    public function getOption(string $name) : ?CommandOption
+    public function getOption(string $name): ?CommandOption
     {
         return $this->Options[strtolower($name)] ?? null;
     }

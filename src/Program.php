@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+
 /**
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
@@ -20,8 +21,7 @@ class Program
     {
         $dispatcher = new CommandDispatcher();
 
-        $dispatcher->addCommand(function(CommandLine $command)
-        {
+        $dispatcher->addCommand(function (CommandLine $command) {
             $command->setName('new');
             $command->setDescription('Create a new project');
             $command->addParameter('template');
@@ -30,8 +30,7 @@ class Program
             $command->OnExecute(new NewCommand(), 'execute');
         });
 
-        $dispatcher->addCommand(function(CommandLine $command)
-        {
+        $dispatcher->addCommand(function (CommandLine $command) {
             $command->setName('run');
             $command->setDescription('Run the DevNet applicaton');
             $command->addOption('--project');
@@ -39,8 +38,7 @@ class Program
             $command->OnExecute(new RunCommand(), 'execute');
         });
 
-        $dispatcher->addCommand(function(CommandLine $command)
-        {
+        $dispatcher->addCommand(function (CommandLine $command) {
             $command->setName('add');
             $command->setDescription('Add a template code file to the project');
             $command->addParameter('template');
@@ -53,29 +51,25 @@ class Program
         self::processArgs($dispatcher, $args);
     }
 
-    public static function processArgs(CommandDispatcher $dispatcher, array $args) : void
+    public static function processArgs(CommandDispatcher $dispatcher, array $args): void
     {
         $argument = $args[0] ?? null;
 
-        if ($argument == '--path')
-        {
+        if ($argument == '--path') {
             self::showPath();
         }
 
-        if ($argument == '--version')
-        {
+        if ($argument == '--version') {
             self::showVersion();
         }
 
-        if ($argument == '--help')
-        {
+        if ($argument == '--help') {
             self::showHelp($dispatcher);
         }
 
         $result = $dispatcher->invoke($args);
 
-        if (!$result || !$argument)
-        {
+        if (!$result || !$argument) {
             Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("The specified command was not found, try 'devnet --help' for more help.");
             Console::resetColor();
@@ -83,7 +77,7 @@ class Program
         }
     }
 
-    public static function showHelp(CommandDispatcher $dispatcher) : void
+    public static function showHelp(CommandDispatcher $dispatcher): void
     {
         Console::writeline("DevNet command-line interface v1.0.0");
         Console::writeline("Usage: devnet [options]");
@@ -99,16 +93,14 @@ class Program
         $super = 0;
         $commands = $dispatcher->Commands;
 
-        foreach ($commands as $command)
-        {
+        foreach ($commands as $command) {
             $lenth = strlen($command->getName());
             if ($lenth > $super) {
                 $super = $lenth;
             }
         }
 
-        foreach ($commands as $command)
-        {
+        foreach ($commands as $command) {
             $lenth = strlen($command->getName());
             $steps = $super - $lenth + 3;
             $space = str_repeat(" ", $steps);
@@ -120,16 +112,16 @@ class Program
         exit;
     }
 
-    public static function showVersion() : void
+    public static function showVersion(): void
     {
         Console::writeline("DevNet command-line interface v1.0.0");
         Console::writeline("Copyright (c) DevNet");
         exit;
     }
 
-    public static function showPath() : void
+    public static function showPath(): void
     {
-        Console::writeline(dirname(__DIR__,2));
+        Console::writeline(dirname(__DIR__, 2));
         exit;
     }
 }

@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+
 /**
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
@@ -35,12 +36,12 @@ class CommandLine
         $this->Description = $description;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->Name;
     }
 
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->Description;
     }
@@ -55,12 +56,12 @@ class CommandLine
         $this->Options[] = $name;
     }
 
-    public function getParameters() : array
+    public function getParameters(): array
     {
         return $this->Parameters;
     }
 
-    public function getOptions() : array
+    public function getOptions(): array
     {
         return $this->Options;
     }

@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+
 /**
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
@@ -16,7 +17,7 @@ use DevNet\System\IO\Console;
 
 class AddCommand implements ICommand
 {
-    public function execute(object $sender, EventArgs $event) : void
+    public function execute(object $sender, EventArgs $event): void
     {
         $namespace = 'Application';
         $className = null;
@@ -25,28 +26,24 @@ class AddCommand implements ICommand
         $template  = $arguments->getParameter('template');
         $help      = $arguments->getOption('--help');
         $name      = $arguments->getOption('--name');
-        
-        if ($help)
-        {
+
+        if ($help) {
             $this->showHelp();
         }
-        
-        if (!$template || !$template->Value)
-        {
+
+        if (!$template || !$template->Value) {
             Console::foreGroundColor(ConsoleColor::Red);
             Console::writeline('Template argument is missing!');
             Console::resetColor();
             exit;
         }
 
-        if ($name)
-        {
+        if ($name) {
             $className = $name->Value;
         }
 
         $directory = $arguments->getOption('--directory');
-        if ($directory)
-        {
+        if ($directory) {
             $basePath = $directory->Value;
         }
 
@@ -72,8 +69,7 @@ class AddCommand implements ICommand
                 break;
         }
 
-        if (!$result)
-        {
+        if (!$result) {
             Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Somthing whent wrong! faild to create {$className} class.");
             Console::resetColor();
@@ -87,7 +83,7 @@ class AddCommand implements ICommand
         exit;
     }
 
-    public static function createClass(string $namespace, ?string $className, ?string $basePath) : bool
+    public static function createClass(string $namespace, ?string $className, ?string $basePath): bool
     {
         $namespace   = implode('\\', [$namespace, $basePath]);
         $namespace   = str_replace('/', '\\', $namespace);
@@ -114,24 +110,22 @@ class AddCommand implements ICommand
         $context->append('}');
         $context->appendLine();
 
-        if (!is_dir($destination))
-        {
+        if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
         }
 
-        $myfile = fopen($destination.'/'.$className.'.php', 'w');
+        $myfile = fopen($destination . '/' . $className . '.php', 'w');
         $size   = fwrite($myfile, $context->__toString());
         $status = fclose($myfile);
 
-        if (!$size || !$status)
-        {
+        if (!$size || !$status) {
             return false;
         }
 
         return true;
     }
 
-    public static function createController(string $namespace, ?string $className, ?string $basePath) : bool
+    public static function createController(string $namespace, ?string $className, ?string $basePath): bool
     {
         $basePath    = $basePath ?? 'Controllers';
         $namespace   = implode('\\', [$namespace, $basePath]);
@@ -159,12 +153,11 @@ class AddCommand implements ICommand
         $context->appendLine('}');
         $context->appendLine();
 
-        if (!is_dir($destination))
-        {
+        if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
         }
 
-        $myfile = fopen($destination.'/'.$className.'.php', 'w');
+        $myfile = fopen($destination . '/' . $className . '.php', 'w');
         $size   = fwrite($myfile, $context->__toString());
         $status = fclose($myfile);
 
@@ -175,7 +168,7 @@ class AddCommand implements ICommand
         return false;
     }
 
-    public static function createEntity(string $namespace, ?string $className, ?string $basePath) : bool
+    public static function createEntity(string $namespace, ?string $className, ?string $basePath): bool
     {
         $basePath    = $basePath ?? 'Models';
         $namespace   = implode('\\', [$namespace, $basePath]);
@@ -213,12 +206,11 @@ class AddCommand implements ICommand
         $context->appendLine('}');
         $context->appendLine();
 
-        if (!is_dir($destination))
-        {
+        if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
         }
 
-        $myfile = fopen($destination.'/'.$className.'.php', 'w');
+        $myfile = fopen($destination . '/' . $className . '.php', 'w');
         $size   = fwrite($myfile, $context->__toString());
         $status = fclose($myfile);
 

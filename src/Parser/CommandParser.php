@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+
 /**
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
@@ -34,31 +35,23 @@ class CommandParser
             $token = array_shift($args);
             $normalToken = $token ? strtolower($token) : null;
 
-            if (isset($this->Options[$normalToken]))
-            {
+            if (isset($this->Options[$normalToken])) {
                 $nextToken = $args[0] ?? null;
                 $normlNextToken = $nextToken ? strtolower($nextToken) : null;
 
-                if (!isset($this->Options[$normlNextToken]))
-                {
+                if (!isset($this->Options[$normlNextToken])) {
                     $options[$normalToken] = new CommandOption($token, $nextToken);
                     array_shift($args);
-                }
-                else
-                {
+                } else {
                     $options[$normalToken] = new CommandOption($token, null);
                 }
-            }
-            else
-            {
+            } else {
                 $paramName = $params[0] ?? null;
-                if ($paramName)
-                {
+                if ($paramName) {
                     $parameters[strtolower($paramName)] = new CommandParameter($paramName, $token);
                     array_shift($params);
                 }
             }
-
         } while ($args != []);
 
         return new CommandArguments($arguments, $parameters, $options);

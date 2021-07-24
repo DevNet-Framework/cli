@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+
 /**
  * @author      Mohammed Moussaoui
  * @copyright   Copyright (c) Mohammed Moussaoui. All rights reserved.
@@ -16,7 +17,7 @@ use DevNet\System\IO\Console;
 
 class NewCommand implements ICommand
 {
-    public function execute(object $sender, EventArgs $event) : void
+    public function execute(object $sender, EventArgs $event): void
     {
         $namespace = "Application";
         $className = "Program";
@@ -26,13 +27,11 @@ class NewCommand implements ICommand
         $help      = $arguments->getOption('--help');
         $project   = $arguments->getOption('--project');
 
-        if ($help)
-        {
+        if ($help) {
             $this->showHelp();
         }
 
-        if (!$template || !$template->Value)
-        {
+        if (!$template || !$template->Value) {
             Console::foreGroundColor(ConsoleColor::Red);
             Console::writeline("Template argument is missing!");
             Console::resetColor();
@@ -40,8 +39,7 @@ class NewCommand implements ICommand
         }
 
         $project = $arguments->getOption('--project');
-        if ($project)
-        {
+        if ($project) {
             $basePath = $project->Value;
         }
 
@@ -50,16 +48,12 @@ class NewCommand implements ICommand
         $templateName = strtolower($templateName);
         $result       = false;
 
-        if ($templateName == 'console')
-        {
+        if ($templateName == 'console') {
             $result = self::createProject($namespace, $className, $destination);
-        }
-        else
-        {
+        } else {
             $rootDir = dirname(__DIR__, 3);
-            $source  = $rootDir.'/templates/'.$templateName;
-            if (!is_dir($source))
-            {
+            $source  = $rootDir . '/templates/' . $templateName;
+            if (!is_dir($source)) {
                 Console::foregroundColor(ConsoleColor::Red);
                 Console::writeline("The template {$templateName} does not exist!");
                 Console::resetColor();
@@ -69,14 +63,11 @@ class NewCommand implements ICommand
             $result  = self::copyProject($source, $destination);
         }
 
-        if ($result)
-        {
+        if ($result) {
             Console::foregroundColor(ConsoleColor::Green);
             Console::writeline("The {$templateName} template was created successfully.");
             Console::resetColor();
-        }
-        else
-        {
+        } else {
             Console::foregroundColor(ConsoleColor::Red);
             Console::writeline("Somthing whent wrong! faild to create {$templateName} template.");
             Console::resetColor();
@@ -85,13 +76,12 @@ class NewCommand implements ICommand
         exit;
     }
 
-    public static function createProject(string $namespace, string $className, string $destination) : bool
+    public static function createProject(string $namespace, string $className, string $destination): bool
     {
         $namespace = ucwords($namespace, "\\");
         $className = ucfirst($className);
 
-        if (!is_dir($destination))
-        {
+        if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
         }
 
@@ -110,12 +100,11 @@ class NewCommand implements ICommand
         $context->appendLine("    }");
         $context->appendLine("}");
 
-        $myfile = fopen($destination."/".$className.".php", "w");
+        $myfile = fopen($destination . "/" . $className . ".php", "w");
         $size   = fwrite($myfile, $context->__toString());
         $status = fclose($myfile);
 
-        if (!$size || !$status)
-        {
+        if (!$size || !$status) {
             return false;
         }
 
@@ -128,45 +117,35 @@ class NewCommand implements ICommand
         $context->appendLine("  </properties>");
         $context->appendLine("</project>");
 
-        $myfile = fopen($destination."/project.phproj", "w");
+        $myfile = fopen($destination . "/project.phproj", "w");
         $size   = fwrite($myfile, $context->__toString());
         $status = fclose($myfile);
 
-        if (!$size || !$status)
-        {
+        if (!$size || !$status) {
             return false;
         }
 
         return true;
     }
 
-    public static function copyProject(string $src, string $dst) : bool
-    {   
-        try
-        {
+    public static function copyProject(string $src, string $dst): bool
+    {
+        try {
             $dir = opendir($src);
-            if (!is_dir($dst))
-            {
+            if (!is_dir($dst)) {
                 mkdir($dst, 0777, true);
             }
 
-            while($file = readdir($dir))
-            {
-                if ($file !== '.' && $file !== '..' && $file !== '.git')
-                {  
-                    if (is_dir($src . '/' . $file))
-                    {
-                        self::copyProject($src . '/' . $file, $dst . '/' . $file);  
-                    }  
-                    else
-                    {  
-                        copy($src . '/' . $file, $dst . '/' . $file);  
-                    }  
-                }  
+            while ($file = readdir($dir)) {
+                if ($file !== '.' && $file !== '..' && $file !== '.git') {
+                    if (is_dir($src . '/' . $file)) {
+                        self::copyProject($src . '/' . $file, $dst . '/' . $file);
+                    } else {
+                        copy($src . '/' . $file, $dst . '/' . $file);
+                    }
+                }
             }
-        }
-        catch(\Throwable $th)
-        {
+        } catch (\Throwable $th) {
             return false;
         }
 
@@ -188,24 +167,20 @@ class NewCommand implements ICommand
         $root = dirname(__DIR__, 3);
         $list = [];
 
-        if (is_dir($root.'/templates'))
-        {
-            $list = scandir($root.'/templates');
+        if (is_dir($root . '/templates')) {
+            $list = scandir($root . '/templates');
         }
-        
+
         $metadata[] = ['name' => 'console', 'description' => 'Console Applicatinon project'];
         $maxLenth   = 7; // the initial max length is the length the word "console"
 
-        foreach ($list as $name)
-        {
-            if (file_exists($root.'/templates/'.$name.'/composer.json'))
-            {
-                $json    = file_get_contents($root.'/templates/'.$name.'/composer.json');
+        foreach ($list as $name) {
+            if (file_exists($root . '/templates/' . $name . '/composer.json')) {
+                $json    = file_get_contents($root . '/templates/' . $name . '/composer.json');
                 $project = json_decode($json);
 
                 $lenth   = strlen($name);
-                if ($lenth > $maxLenth)
-                {
+                if ($lenth > $maxLenth) {
                     $maxLenth = $lenth;
                 }
 
@@ -214,14 +189,13 @@ class NewCommand implements ICommand
         }
 
         //print template description with auto-alignment
-        foreach ($metadata as $template)
-        {
+        foreach ($metadata as $template) {
             $lenth = strlen($template['name']);
             $steps = $maxLenth - $lenth + 4;
             $space = str_repeat(" ", $steps);
             Console::writeline("  {$template['name']}{$space}{$template['description']}");
         }
-        
+
         Console::writeline();
         exit;
     }
