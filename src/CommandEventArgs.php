@@ -13,18 +13,17 @@ use DevNet\System\Event\EventArgs;
 
 class CommandEventArgs extends EventArgs
 {
-    private ?string $Name;
-    private array $Parameters;
-    private array $Options;
-    private array $Arguments;
+    protected array $Parameters = [];
+    protected array $Inputs = [];
 
-    public function getName()
+    public function __construct(array $parameters = [], array $inputs = [])
     {
-        return $this->Attributes['name'] ?? null;
+        $this->Parameters = $parameters;
+        $this->Inputs = $inputs;
     }
 
-    public function getArguments()
+    public function get(string $name)
     {
-        return $this->Attributes['arguments'] ?? [];
+        return $this->Parameters[$name] ?? null;
     }
 }
