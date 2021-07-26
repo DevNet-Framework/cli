@@ -7,9 +7,9 @@
  * @link        https://github.com/DevNet-Framework
  */
 
-namespace DevNet\Cli\Parser;
+namespace DevNet\Cli\Parsing;
 
-class CommandParameter
+class CommandOption
 {
     private string $Name;
     public ?string $Value;
