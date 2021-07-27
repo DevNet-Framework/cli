@@ -9,7 +9,7 @@
 
 namespace DevNet\Cli;
 
-use DevNet\Cli\Parser\CommandParser;
+use DevNet\Cli\Parsing\CommandParser;
 use DevNet\System\Event\EventHandler;
 use DevNet\System\Event\EventArgs;
 
@@ -17,7 +17,7 @@ class CommandLine
 {
     private string $Name;
     private string $Description;
-    private array $Parameters = [];
+    private array $Arguments = [];
     private array $Options = [];
     private EventHandler $Event;
 
@@ -46,9 +46,9 @@ class CommandLine
         return $this->Description;
     }
 
-    public function addParameter(string $name)
+    public function addArgument(string $name)
     {
-        $this->Parameters[] = $name;
+        $this->Arguments[] = $name;
     }
 
     public function addOption(string $name)
@@ -56,9 +56,9 @@ class CommandLine
         $this->Options[] = $name;
     }
 
-    public function getParameters(): array
+    public function getArguments(): array
     {
-        return $this->Parameters;
+        return $this->Arguments;
     }
 
     public function getOptions(): array
@@ -75,18 +75,16 @@ class CommandLine
     {
         $parser = new CommandParser();
 
-        foreach ($this->Parameters as $parameter) {
-            $parser->addParameter($parameter);
+        foreach ($this->Arguments as $argument) {
+            $parser->addArgument($argument);
         }
 
         foreach ($this->Options as $option) {
             $parser->addOption($option);
         }
 
-        $arguments = $parser->parse($args);
-
-        $eventArgs = new EventArgs();
-        $eventArgs->setAttribute("arguments", $arguments);
+        $parameters = $parser->parse($args);
+        $eventArgs = new CommandEventArgs($parameters, $args);
 
         $this->Event->__invoke($this, $eventArgs);
     }
