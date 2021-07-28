@@ -24,7 +24,7 @@ class Program
         $dispatcher->addCommand(function (CommandLine $command) {
             $command->setName('new');
             $command->setDescription('Create a new project');
-            $command->addParameter('template');
+            $command->addArgument('template');
             $command->addOption('--project');
             $command->addOption('--help');
             $command->OnExecute(new NewCommand(), 'execute');
@@ -41,7 +41,7 @@ class Program
         $dispatcher->addCommand(function (CommandLine $command) {
             $command->setName('add');
             $command->setDescription('Add a template code file to the project');
-            $command->addParameter('template');
+            $command->addArgument('template');
             $command->addOption('--name');
             $command->addOption('--directory');
             $command->addOption('--help');
