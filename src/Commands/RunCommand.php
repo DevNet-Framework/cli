@@ -17,30 +17,29 @@ use DevNet\System\IO\Console;
 
 class RunCommand implements ICommand
 {
-    public function execute(object $sender, EventArgs $event): void
+    public function execute(object $sender, EventArgs $args): void
     {
         $workspace =  getcwd();
         $mainClass = "Application\Program";
         $loader    = LauncherProperties::getLoader();
-        $arguments = $event->getAttribute('arguments');
-        $help      = $arguments->getOption('--help');
+        $help      = $args->get('--help');
 
         if ($help) {
             $this->showHelp();
         }
 
-        $args = $arguments->Values;
-        $project = $arguments->getOption('--project');
+        $inputs = $args->Inputs;
+        $project = $args->get('--project');
 
         if ($project) {
             if ($project->Value) {
                 $workspace = $project->Value;
                 $loader->setWorkspace($workspace);
-                foreach ($args as $key => $arg) {
+                foreach ($inputs as $key => $arg) {
                     if ($arg == $project->Name) {
-                        unset($args[$key]);
-                        unset($args[$key + 1]);
-                        $args = array_values($args);
+                        unset($inputs[$key]);
+                        unset($inputs[$key + 1]);
+                        $inputs = array_values($inputs);
                         break;
                     }
                 }
@@ -85,7 +84,7 @@ class RunCommand implements ICommand
             exit;
         }
 
-        $mainClass::main($args);
+        $mainClass::main($inputs);
     }
 
     public function showHelp(): void
