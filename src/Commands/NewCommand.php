@@ -17,15 +17,14 @@ use DevNet\System\IO\Console;
 
 class NewCommand implements ICommand
 {
-    public function execute(object $sender, EventArgs $event): void
+    public function execute(object $sender, EventArgs $args): void
     {
         $namespace = "Application";
         $className = "Program";
         $basePath  = null;
-        $arguments = $event->getAttribute('arguments');
-        $template  = $arguments->getParameter('template');
-        $help      = $arguments->getOption('--help');
-        $project   = $arguments->getOption('--project');
+        $template  = $args->get('template');
+        $help      = $args->get('--help');
+        $project   = $args->get('--project');
 
         if ($help) {
             $this->showHelp();
@@ -38,7 +37,6 @@ class NewCommand implements ICommand
             exit;
         }
 
-        $project = $arguments->getOption('--project');
         if ($project) {
             $basePath = $project->Value;
         }
