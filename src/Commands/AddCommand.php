@@ -17,15 +17,14 @@ use DevNet\System\IO\Console;
 
 class AddCommand implements ICommand
 {
-    public function execute(object $sender, EventArgs $event): void
+    public function execute(object $sender, EventArgs $args): void
     {
         $namespace = 'Application';
         $className = null;
         $basePath  = null;
-        $arguments = $event->getAttribute('arguments');
-        $template  = $arguments->getParameter('template');
-        $help      = $arguments->getOption('--help');
-        $name      = $arguments->getOption('--name');
+        $template  = $args->get('template');
+        $help      = $args->get('--help');
+        $name      = $args->get('--name');
 
         if ($help) {
             $this->showHelp();
@@ -42,7 +41,7 @@ class AddCommand implements ICommand
             $className = $name->Value;
         }
 
-        $directory = $arguments->getOption('--directory');
+        $directory = $args->get('--directory');
         if ($directory) {
             $basePath = $directory->Value;
         }
