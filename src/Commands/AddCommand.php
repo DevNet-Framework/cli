@@ -76,7 +76,7 @@ class AddCommand implements ICommand
         }
 
         Console::foregroundColor(ConsoleColor::Green);
-        Console::writeline("The class {$className} was created successfully.");
+        Console::writeline("The {$templateName} {$className} was created successfully.");
         Console::resetColor();
 
         exit;
@@ -84,13 +84,13 @@ class AddCommand implements ICommand
 
     public static function createClass(string $namespace, ?string $className, ?string $basePath): bool
     {
+        $destination = implode('/', [getcwd(), $basePath]);
         $namespace   = implode('\\', [$namespace, $basePath]);
         $namespace   = str_replace('/', '\\', $namespace);
         $namespace   = rtrim($namespace, '\\');
         $namespace   = ucwords($namespace, '\\');
         $className   = $className ?? 'MyClass';
         $className   = ucfirst($className);
-        $destination = implode('/', [getcwd(), $basePath]);
 
         $context = new StringBuilder();
         $context->appendLine('<?php');
@@ -106,8 +106,7 @@ class AddCommand implements ICommand
         $context->appendLine('    {');
         $context->appendLine('        // code...');
         $context->appendLine('    }');
-        $context->append('}');
-        $context->appendLine();
+        $context->appendLine('}');
 
         if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
@@ -150,7 +149,6 @@ class AddCommand implements ICommand
         $context->appendLine('        return $this->view();');
         $context->appendLine('    }');
         $context->appendLine('}');
-        $context->appendLine();
 
         if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
@@ -170,22 +168,22 @@ class AddCommand implements ICommand
     public static function createEntity(string $namespace, ?string $className, ?string $basePath): bool
     {
         $basePath    = $basePath ?? 'Models';
+        $destination = implode('/', [getcwd(), $basePath]);
         $namespace   = implode('\\', [$namespace, $basePath]);
         $namespace   = str_replace('/', '\\', $namespace);
         $namespace   = rtrim($namespace, '\\');
         $namespace   = ucwords($namespace, '\\');
         $className   = $className ?? 'MyEntity';
         $className   = ucfirst($className);
-        $destination = implode('/', [getcwd(), $basePath]);
 
         $context = new StringBuilder();
         $context->appendLine('<?php');
         $context->appendLine();
-        $context->appendLine('namespace {$namespace};');
+        $context->appendLine("namespace {$namespace};");
         $context->appendLine();
         $context->appendLine('use DevNet\Entity\IEntity;');
         $context->appendLine();
-        $context->appendLine('class {$className} implements IEntity');
+        $context->appendLine("class {$className} implements IEntity");
         $context->appendLine('{');
         $context->appendLine('    private int $Id;');
         $context->appendLine();
@@ -198,12 +196,11 @@ class AddCommand implements ICommand
         $context->appendLine('    {');
         $context->appendLine('        if (!property_exists($this, $name))');
         $context->appendLine('        {');
-        $context->appendLine('            throw new \Exception("The property {$name} doesn\'t exist.\");');
+        $context->appendLine('            throw new \Exception("The property {$name} doesn\'t exist.");');
         $context->appendLine('        }');
         $context->appendLine('        $this->$name = $value;');
         $context->appendLine('    }');
         $context->appendLine('}');
-        $context->appendLine();
 
         if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
