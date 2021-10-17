@@ -60,6 +60,9 @@ class AddCommand implements ICommand
             case 'entity':
                 $result = self::createEntity($namespace, $className, $basePath);
                 break;
+            case 'migration':
+                $result = self::createMigration($namespace, $className, $basePath);
+                break;
             default:
                 Console::foreGroundColor(ConsoleColor::Red);
                 Console::writeline("The template {$templateName} not exist!");
@@ -217,6 +220,56 @@ class AddCommand implements ICommand
         return false;
     }
 
+    public static function createMigration(string $namespace, ?string $className, ?string $basePath): bool
+    {
+        $basePath    = $basePath ?? 'Migrations';
+        $destination = implode('/', [getcwd(), $basePath]);
+        $namespace   = implode('\\', [$namespace, $basePath]);
+        $namespace   = str_replace('/', '\\', $namespace);
+        $namespace   = rtrim($namespace, '\\');
+        $namespace   = ucwords($namespace, '\\');
+        $className   = $className ?? 'MyMigration';
+        $className   = ucfirst($className);
+
+        $context = new StringBuilder();
+        $context->appendLine('<?php');
+        $context->appendLine();
+        $context->appendLine("namespace {$namespace};");
+        $context->appendLine();
+        $context->appendLine('use DevNet\Entity\Migration\AbstractMigration;');
+        $context->appendLine('use DevNet\Entity\Migration\MigrationBuilder;');
+        $context->appendLine();
+        $context->appendLine("class {$className} extends AbstractMigration");
+        $context->appendLine('{');
+        $context->appendLine('    public function up(MigrationBuilder $builder): void');
+        $context->appendLine('    {');
+        $context->appendLine('        $builder->createTable(\'MyTable\', function ($table) {;');
+        $context->appendLine('            $table->column(\'Id\')->type(\'integer\')->nullable(false)->identity();');
+        $context->appendLine('            $table->primaryKey(\'Id\');');
+        $context->appendLine('        });');
+        $context->appendLine('    }');
+        $context->appendLine();
+        $context->appendLine('    public function down(MigrationBuilder $builder): void');
+        $context->appendLine('    {');
+        $context->appendLine('        $builder->dropTable(\'MyTable\');');
+        $context->appendLine('    }');
+        $context->appendLine('}');
+
+        if (!is_dir($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        $myfile = fopen($destination . '/' . date('Ymdhis') . '_' . $className . '.php', 'w');
+        $size   = fwrite($myfile, $context->__toString());
+        $status = fclose($myfile);
+
+        if ($size && $status) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function showHelp()
     {
         Console::writeline('Usage: devnet new [template] [arguments] [options]');
@@ -229,6 +282,7 @@ class AddCommand implements ICommand
         Console::writeline('  class       Simple Class');
         Console::writeline('  controller  Controller Class');
         Console::writeline('  entity      Entity Class');
+        Console::writeline('  migration   Migration Class');
         Console::writeline();
         exit;
     }
