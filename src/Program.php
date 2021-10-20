@@ -10,6 +10,7 @@
 namespace DevNet\Cli;
 
 use DevNet\Cli\Commands\AddCommand;
+use DevNet\Cli\Commands\MigrateCommand;
 use DevNet\Cli\Commands\NewCommand;
 use DevNet\Cli\Commands\RunCommand;
 use DevNet\System\IO\ConsoleColor;
@@ -22,8 +23,18 @@ class Program
         $dispatcher = new CommandDispatcher();
 
         $dispatcher->addCommand(function (CommandLine $command) {
+            $command->setName('add');
+            $command->setDescription('Add a template code file to the project.');
+            $command->addArgument('template');
+            $command->addOption('--name');
+            $command->addOption('--directory');
+            $command->addOption('--help');
+            $command->OnExecute(new AddCommand(), 'execute');
+        });
+
+        $dispatcher->addCommand(function (CommandLine $command) {
             $command->setName('new');
-            $command->setDescription('Create a new project');
+            $command->setDescription('Create a new project.');
             $command->addArgument('template');
             $command->addOption('--project');
             $command->addOption('--help');
@@ -31,21 +42,19 @@ class Program
         });
 
         $dispatcher->addCommand(function (CommandLine $command) {
-            $command->setName('run');
-            $command->setDescription('Run the DevNet applicaton');
-            $command->addOption('--project');
+            $command->setName('migrate');
+            $command->setDescription('Migrate database schema and data.');
+            $command->addOption('--target');
             $command->addOption('--help');
-            $command->OnExecute(new RunCommand(), 'execute');
+            $command->OnExecute(new MigrateCommand(), 'execute');
         });
 
         $dispatcher->addCommand(function (CommandLine $command) {
-            $command->setName('add');
-            $command->setDescription('Add a template code file to the project');
-            $command->addArgument('template');
-            $command->addOption('--name');
-            $command->addOption('--directory');
+            $command->setName('run');
+            $command->setDescription('Run the DevNet applicaton.');
+            $command->addOption('--project');
             $command->addOption('--help');
-            $command->OnExecute(new AddCommand(), 'execute');
+            $command->OnExecute(new RunCommand(), 'execute');
         });
 
         self::processArgs($dispatcher, $args);
