@@ -9,15 +9,26 @@
 
 namespace DevNet\Cli\Commands;
 
-use DevNet\Cli\ICommand;
+use DevNet\System\Command\CommandEventArgs;
+use DevNet\System\Command\CommandLine;
+use DevNet\System\Command\CommandOption;
+use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Runtime\LauncherProperties;
-use DevNet\System\Event\EventArgs;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
-class RunCommand implements ICommand
+class RunCommand extends CommandLine implements ICommandHandler
 {
-    public function execute(object $sender, EventArgs $args): void
+    public function __construct()
+    {
+        $this->setName('run');
+        $this->setDescription('Run DevNet Application.');
+        $this->addOption(new CommandOption('--help', '-h'));
+        $this->addOption(new CommandOption('--project', '-p'));
+        $this->addHandler($this);
+    }
+
+    public function execute(object $sender, CommandEventArgs $args): void
     {
         $workspace =  getcwd();
         $mainClass = "Application\Program";
@@ -28,7 +39,7 @@ class RunCommand implements ICommand
             $this->showHelp();
         }
 
-        $inputs = $args->Inputs;
+        $inputs  = $args->Inputs;
         $project = $args->get('--project');
 
         if ($project) {
