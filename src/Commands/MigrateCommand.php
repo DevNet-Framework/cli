@@ -9,21 +9,33 @@
 
 namespace DevNet\Cli\Commands;
 
-use DevNet\Cli\ICommand;
 use DevNet\Core\Configuration\ConfigurationBuilder;
 use DevNet\Core\Dependency\ServiceCollection;
 use DevNet\Core\Dependency\ServiceProvider;
 use DevNet\Entity\EntityContext;
 use DevNet\Entity\EntityOptions;
 use DevNet\Entity\Migration\Migrator;
+use DevNet\System\Command\CommandEventArgs;
+use DevNet\System\Command\CommandLine;
+use DevNet\System\Command\CommandOption;
+use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Runtime\LauncherProperties;
 use DevNet\System\Event\EventArgs;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
-class MigrateCommand implements ICommand
+class MigrateCommand extends CommandLine implements ICommandHandler
 {
-    public function execute(object $sender, EventArgs $args): void
+    public function __construct()
+    {
+        $this->setName('migrate');
+        $this->setDescription('Migrate database schema and data.');
+        $this->addOption(new CommandOption ('--help', '-h'));
+        $this->addOption(new CommandOption('--target'));
+        $this->addHandler($this);
+    }
+
+    public function execute(object $sender, CommandEventArgs $args): void
     {
         $workspace = getcwd();
         $loader    = LauncherProperties::getLoader();
