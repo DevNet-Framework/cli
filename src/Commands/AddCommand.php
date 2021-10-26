@@ -9,15 +9,29 @@
 
 namespace DevNet\Cli\Commands;
 
-use DevNet\Cli\ICommand;
-use DevNet\System\Event\EventArgs;
+use DevNet\System\Command\CommandArgument;
+use DevNet\System\Command\CommandEventArgs;
+use DevNet\System\Command\CommandLine;
+use DevNet\System\Command\CommandOption;
+use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Text\StringBuilder;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
-class AddCommand implements ICommand
+class AddCommand extends CommandLine implements ICommandHandler
 {
-    public function execute(object $sender, EventArgs $args): void
+    public function __construct()
+    {
+        $this->setName('add');
+        $this->setDescription('Add template class to the project.');
+        $this->addArgument(new CommandArgument('template'));
+        $this->addOption(new CommandOption('--directory', '-d'));
+        $this->addOption(new CommandOption('--name', '-n'));
+        $this->addOption(new CommandOption('--help', '-h'));
+        $this->addHandler($this);
+    }
+
+    public function execute(object $sender, CommandEventArgs $args): void
     {
         $namespace = 'Application';
         $className = null;
@@ -38,6 +52,12 @@ class AddCommand implements ICommand
         }
 
         if ($name) {
+            if (!$name->Value) {
+                Console::foreGroundColor(ConsoleColor::Red);
+                Console::writeline('Name argument is missing!');
+                Console::resetColor();
+                exit;
+            }
             $className = $name->Value;
         }
 
@@ -275,8 +295,8 @@ class AddCommand implements ICommand
         Console::writeline('Usage: devnet new [template] [arguments] [options]');
         Console::writeline();
         Console::writeline('Options:');
-        Console::writeline('  --help     Displays help for this command.');
-        Console::writeline('  --project  Location to place the generated project.');
+        Console::writeline('  --help       Displays help for this command.');
+        Console::writeline('  --directory  Location to place the generated project.');
         Console::writeline();
         Console::writeline('templates:');
         Console::writeline('  class       Simple Class');
