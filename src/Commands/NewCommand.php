@@ -9,15 +9,29 @@
 
 namespace DevNet\Cli\Commands;
 
-use DevNet\Cli\ICommand;
+use DevNet\System\Command\CommandArgument;
+use DevNet\System\Command\CommandEventArgs;
+use DevNet\System\Command\CommandLine;
+use DevNet\System\Command\CommandOption;
+use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Event\EventArgs;
 use DevNet\System\Text\StringBuilder;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
-class NewCommand implements ICommand
+class NewCommand extends CommandLine implements ICommandHandler
 {
-    public function execute(object $sender, EventArgs $args): void
+    public function __construct()
+    {
+        $this->setName('new');
+        $this->setDescription('Create a new project.');
+        $this->addArgument(new CommandArgument('template'));
+        $this->addOption(new CommandOption('--help', '-h'));
+        $this->addOption(new CommandOption('--project', '-p'));
+        $this->addHandler($this);
+    }
+
+    public function execute(object $sender, CommandEventArgs $args): void
     {
         $namespace = "Application";
         $className = "Program";
