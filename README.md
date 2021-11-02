@@ -125,7 +125,7 @@ This will create a Program class that outputs a "Hello World" message in your te
 
 namespace Application;
 
-use DevNet\System\IO\Console;
+use DevNet\System\Console;
 
 class Program
 {

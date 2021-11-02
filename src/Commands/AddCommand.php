@@ -15,8 +15,8 @@ use DevNet\System\Command\CommandLine;
 use DevNet\System\Command\CommandOption;
 use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Text\StringBuilder;
-use DevNet\System\IO\ConsoleColor;
-use DevNet\System\IO\Console;
+use DevNet\System\ConsoleColor;
+use DevNet\System\Console;
 
 class AddCommand extends CommandLine implements ICommandHandler
 {
