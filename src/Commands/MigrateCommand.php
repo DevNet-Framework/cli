@@ -20,8 +20,8 @@ use DevNet\System\Command\CommandLine;
 use DevNet\System\Command\CommandOption;
 use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Runtime\LauncherProperties;
-use DevNet\System\ConsoleColor;
-use DevNet\System\Console;
+use DevNet\System\IO\ConsoleColor;
+use DevNet\System\IO\Console;
 
 class MigrateCommand extends CommandLine implements ICommandHandler
 {

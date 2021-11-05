@@ -16,8 +16,8 @@ use DevNet\Cli\Commands\RunCommand;
 use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
 use DevNet\System\Command\CommandOption;
-use DevNet\System\ConsoleColor;
-use DevNet\System\Console;
+use DevNet\System\IO\ConsoleColor;
+use DevNet\System\IO\Console;
 
 class Program
 {

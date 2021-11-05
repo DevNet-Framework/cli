@@ -99,7 +99,7 @@ devnet new --help
 
 ##### Output
 ```
-Usage: devnet new [template] [arguments] [options]
+Usage: devnet new [template] [options] [arguments]
 
 Options:
   --help     Displays help for this command.
@@ -125,7 +125,7 @@ This will create a Program class that outputs a "Hello World" message in your te
 
 namespace Application;
 
-use DevNet\System\Console;
+use DevNet\System\IO\Console;
 
 class Program
 {

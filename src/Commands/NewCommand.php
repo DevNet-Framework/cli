@@ -15,8 +15,8 @@ use DevNet\System\Command\CommandLine;
 use DevNet\System\Command\CommandOption;
 use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Text\StringBuilder;
-use DevNet\System\ConsoleColor;
-use DevNet\System\Console;
+use DevNet\System\IO\ConsoleColor;
+use DevNet\System\IO\Console;
 
 class NewCommand extends CommandLine implements ICommandHandler
 {
@@ -101,7 +101,7 @@ class NewCommand extends CommandLine implements ICommandHandler
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine("use DevNet\System\Console;");
+        $context->appendLine("use DevNet\System\IO\Console;");
         $context->appendLine();
         $context->appendLine("class {$className}");
         $context->appendLine("{");
