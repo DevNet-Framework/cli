@@ -51,6 +51,12 @@ class NewCommand extends CommandLine implements ICommandHandler
         }
 
         if ($project) {
+            if (!$project->Value) {
+                Console::foreGroundColor(ConsoleColor::Red);
+                Console::writeline('Project argument is missing!');
+                Console::resetColor();
+                exit;
+            }
             $basePath = $project->Value;
         }
 
