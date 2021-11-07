@@ -292,11 +292,12 @@ class AddCommand extends CommandLine implements ICommandHandler
 
     public function showHelp()
     {
-        Console::writeline('Usage: devnet new [template] [arguments] [options]');
+        Console::writeline('Usage: devnet new [template] [options] [arguments]');
         Console::writeline();
         Console::writeline('Options:');
-        Console::writeline('  --help       Displays help for this command.');
-        Console::writeline('  --directory  Location to place the generated project.');
+        Console::writeline('  --help, -h       Displays help for this command.');
+        Console::writeline('  --name, -n       Naming the generated class.');
+        Console::writeline('  --directory, -d  Location of where to place the generated class.');
         Console::writeline();
         Console::writeline('templates:');
         Console::writeline('  class       Simple Class');
