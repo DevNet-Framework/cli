@@ -100,7 +100,7 @@ class RunCommand extends CommandLine implements ICommandHandler
 
     public function showHelp(): void
     {
-        Console::writeline("Usage: devnet run [options]");
+        Console::writeline("Usage: devnet run [arguments] [options]");
         Console::writeline();
         Console::writeline("Options:");
         Console::writeline("  --help     Displays help for this command.");

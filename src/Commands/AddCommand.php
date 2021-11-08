@@ -292,7 +292,7 @@ class AddCommand extends CommandLine implements ICommandHandler
 
     public function showHelp()
     {
-        Console::writeline('Usage: devnet new [template] [options] [arguments]');
+        Console::writeline('Usage: devnet new [template] [options]');
         Console::writeline();
         Console::writeline('Options:');
         Console::writeline('  --help, -h       Displays help for this command.');

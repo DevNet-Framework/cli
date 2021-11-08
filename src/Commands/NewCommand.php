@@ -173,12 +173,11 @@ class NewCommand extends CommandLine implements ICommandHandler
 
     public function showHelp()
     {
-        Console::writeline("Usage: devnet new [options]");
         Console::writeline("Usage: devnet new [template] [options]");
         Console::writeline();
         Console::writeline("Options:");
         Console::writeline("  --help     Displays help for this command.");
-        Console::writeline("  --project  Location to place the generated project.");
+        Console::writeline("  --project  Location of where to place the template project.");
         Console::writeline();
         Console::writeline("templates:");
 

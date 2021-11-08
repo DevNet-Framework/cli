@@ -120,7 +120,7 @@ class MigrateCommand extends CommandLine implements ICommandHandler
 
     public function showHelp()
     {
-        Console::writeline('Usage: devnet migrate [option] [argument]');
+        Console::writeline('Usage: devnet migrate [options]');
         Console::writeline();
         Console::writeline('Options:');
         Console::writeline('  --help     Displays help for this command.');
