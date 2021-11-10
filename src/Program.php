@@ -31,14 +31,7 @@ class Program
         $rootCommand->addOption(new CommandOption('--help', '-h'));
         $rootCommand->addOption(new CommandOption('--version', '-v'));
         $rootCommand->Handler->add(new self, 'execute');
-        $result = $rootCommand->invoke($args);
-
-        if (!$result) {
-            Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("The specified command or argument was not found, try 'devnet --help' for more infromation.");
-            Console::resetColor();
-        }
-
+        $rootCommand->invoke($args);
         exit;
     }
 
@@ -53,6 +46,13 @@ class Program
         $version = $args->get('--version');
         if ($version) {
             self::showVersion();
+            return;
+        }
+
+        if ($args->Residual) {
+            Console::foregroundColor(ConsoleColor::Red);
+            Console::writeline("The specified command or option was not found, try '--help' option for usage information.");
+            Console::resetColor();
         }
     }
 

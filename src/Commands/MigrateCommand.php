@@ -36,6 +36,13 @@ class MigrateCommand extends CommandLine implements ICommandHandler
 
     public function execute(object $sender, CommandEventArgs $args): void
     {
+        if ($args->Residual) {
+            Console::foregroundColor(ConsoleColor::Red);
+            Console::writeline("The specified argument or option is not valid, try '--help' option for usage information.");
+            Console::resetColor();
+            exit;
+        }
+        
         $workspace = getcwd();
         $loader    = LauncherProperties::getLoader();
         $help      = $args->get('--help');

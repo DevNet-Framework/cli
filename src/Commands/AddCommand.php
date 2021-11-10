@@ -33,6 +33,13 @@ class AddCommand extends CommandLine implements ICommandHandler
 
     public function execute(object $sender, CommandEventArgs $args): void
     {
+        if ($args->Residual) {
+            Console::foregroundColor(ConsoleColor::Red);
+            Console::writeline("The specified argument or option is not valid, try '--help' option for usage information.");
+            Console::resetColor();
+            exit;
+        }
+        
         $namespace = 'Application';
         $className = null;
         $basePath  = null;
