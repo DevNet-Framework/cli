@@ -77,6 +77,9 @@ class NewCommand extends CommandLine implements ICommandHandler
         } else {
             $rootDir = dirname(__DIR__, 3);
             $source  = $rootDir . '/templates/' . $templateName;
+            if ($templateName == 'web' || $templateName == 'mvc') {
+                $source .= '-template';
+            }
             if (!is_dir($source)) {
                 Console::foregroundColor(ConsoleColor::Red);
                 Console::writeline("The template {$templateName} does not exist!");
@@ -89,7 +92,7 @@ class NewCommand extends CommandLine implements ICommandHandler
 
         if ($result) {
             Console::foregroundColor(ConsoleColor::Green);
-            Console::writeline("The {$templateName} template was created successfully.");
+            Console::writeline("The {$templateName} project was created successfully.");
             Console::resetColor();
         } else {
             Console::foregroundColor(ConsoleColor::Red);
@@ -195,13 +198,17 @@ class NewCommand extends CommandLine implements ICommandHandler
             $list = scandir($root . '/templates');
         }
 
-        $metadata[] = ['name' => 'console', 'description' => 'Console Applicatinon project'];
+        $metadata[] = ['name' => 'console', 'description' => 'DevNet Console Applicatinon'];
         $maxLenth   = 7; // the initial max length is the length the word "console"
 
         foreach ($list as $name) {
             if (file_exists($root . '/templates/' . $name . '/composer.json')) {
                 $json    = file_get_contents($root . '/templates/' . $name . '/composer.json');
                 $project = json_decode($json);
+
+                if ($name == 'web-template' || $name == 'mvc-template') {
+                    $name = strstr($name, '-', true);
+                }
 
                 $lenth   = strlen($name);
                 if ($lenth > $maxLenth) {
