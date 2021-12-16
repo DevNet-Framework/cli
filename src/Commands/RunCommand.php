@@ -16,6 +16,7 @@ use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Runtime\LauncherProperties;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
+use DevNet\System\Runtime\MainMethodRunner;
 
 class RunCommand extends CommandLine implements ICommandHandler
 {
@@ -95,7 +96,8 @@ class RunCommand extends CommandLine implements ICommandHandler
             exit;
         }
 
-        $mainClass::main($inputs);
+        $runner = new MainMethodRunner($mainClass, $inputs);
+        $runner->run();
     }
 
     public function showHelp(): void
