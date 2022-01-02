@@ -13,10 +13,10 @@ use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
 use DevNet\System\Command\CommandOption;
 use DevNet\System\Command\ICommandHandler;
-use DevNet\System\Loader\LauncherProperties;
+use DevNet\System\Runtime\LauncherProperties;
+use DevNet\System\Runtime\MainMethodRunner;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
-use DevNet\System\Loader\MainMethodRunner;
 
 class RunCommand extends CommandLine implements ICommandHandler
 {

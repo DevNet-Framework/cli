@@ -3,7 +3,7 @@
 
 require __DIR__ . '/../../../../vendor/autoload.php';
 
-use DevNet\System\Loader\launcher;
+use DevNet\System\Runtime\launcher;
 
 $launcher = launcher::getLauncher();
 $launcher->workspace(getcwd());
