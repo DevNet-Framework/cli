@@ -169,10 +169,10 @@ class AddCommand extends CommandLine implements ICommandHandler
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine('use DevNet\Web\Controller\AbstractController;');
+        $context->appendLine('use DevNet\Web\Controller\Controller;');
         $context->appendLine('use DevNet\Web\Controller\IActionResult;');
         $context->appendLine();
-        $context->appendLine("class {$className} extends AbstractController");
+        $context->appendLine("class {$className} extends Controller");
         $context->appendLine('{');
         $context->appendLine('    public function index() : IActionResult');
         $context->appendLine('    {');
