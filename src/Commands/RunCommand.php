@@ -58,6 +58,13 @@ class RunCommand extends CommandLine implements ICommandHandler
             }
         }
 
+        if (!file_exists($workspace . "/project.phproj")) {
+            Console::foregroundColor(ConsoleColor::Red);
+            Console::writeline("Couldn't find a project to run in {$workspace}, Ensure if it exists, or pass the correct project path using the option --project.");
+            Console::resetColor();
+            exit;
+        }
+
         $projectFile = simplexml_load_file($workspace . "/project.phproj");
 
         if ($projectFile) {
