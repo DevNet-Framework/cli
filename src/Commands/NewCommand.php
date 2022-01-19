@@ -70,25 +70,22 @@ class NewCommand extends CommandLine implements ICommandHandler
         $destination  = implode("/", [getcwd(), $basePath]);
         $templateName = $template->Value ?? '';
         $templateName = strtolower($templateName);
-        $result       = false;
 
-        if ($templateName == 'console') {
-            $result = self::createProject($namespace, $className, $destination);
-        } else {
-            $rootDir = dirname(__DIR__, 3);
-            $source  = $rootDir . '/templates/' . $templateName;
-            if ($templateName == 'web' || $templateName == 'mvc') {
-                $source .= '-template';
-            }
-            if (!is_dir($source)) {
-                Console::foregroundColor(ConsoleColor::Red);
-                Console::writeline("The template {$templateName} does not exist!");
-                Console::resetColor();
-                exit;
-            }
+        $rootDir = dirname(__DIR__, 3);
+        $source  = $rootDir . '/templates/' . $templateName;
+        $result  = false;
 
-            $result  = self::copyProject($source, $destination);
+        if ($templateName == 'console' || $templateName == 'web' || $templateName == 'mvc') {
+            $source .= '-template';
         }
+        if (!is_dir($source)) {
+            Console::foregroundColor(ConsoleColor::Red);
+            Console::writeline("The template {$templateName} does not exist!");
+            Console::resetColor();
+            exit;
+        }
+
+        $result = self::createProject($source, $destination);
 
         if ($result) {
             Console::foregroundColor(ConsoleColor::Green);
@@ -103,59 +100,7 @@ class NewCommand extends CommandLine implements ICommandHandler
         exit;
     }
 
-    public static function createProject(string $namespace, string $className, string $destination): bool
-    {
-        $namespace = ucwords($namespace, "\\");
-        $className = ucfirst($className);
-
-        if (!is_dir($destination)) {
-            mkdir($destination, 0777, true);
-        }
-
-        $context = new StringBuilder();
-        $context->appendLine("<?php");
-        $context->appendLine();
-        $context->appendLine("namespace {$namespace};");
-        $context->appendLine();
-        $context->appendLine("use DevNet\System\IO\Console;");
-        $context->appendLine();
-        $context->appendLine("class {$className}");
-        $context->appendLine("{");
-        $context->appendLine("    public static function main(array \$args = [])");
-        $context->appendLine("    {");
-        $context->appendLine("        Console::writeline(\"Hello World!\");");
-        $context->appendLine("    }");
-        $context->appendLine("}");
-
-        $myfile = fopen($destination . "/" . $className . ".php", "w");
-        $size   = fwrite($myfile, $context->__toString());
-        $status = fclose($myfile);
-
-        if (!$size || !$status) {
-            return false;
-        }
-
-        $context = new StringBuilder();
-        $context->appendLine("<?xml version=\"1.0\"?>");
-        $context->appendLine("<project>");
-        $context->appendLine("  <properties>");
-        $context->appendLine("    <namespace>{$namespace}</namespace>");
-        $context->appendLine("    <entrypoint>{$className}</entrypoint>");
-        $context->appendLine("  </properties>");
-        $context->appendLine("</project>");
-
-        $myfile = fopen($destination . "/project.phproj", "w");
-        $size   = fwrite($myfile, $context->__toString());
-        $status = fclose($myfile);
-
-        if (!$size || !$status) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public static function copyProject(string $src, string $dst): bool
+    public static function createProject(string $src, string $dst): bool
     {
         try {
             $dir = opendir($src);
@@ -166,7 +111,7 @@ class NewCommand extends CommandLine implements ICommandHandler
             while ($file = readdir($dir)) {
                 if ($file !== '.' && $file !== '..' && $file !== '.git') {
                     if (is_dir($src . '/' . $file)) {
-                        self::copyProject($src . '/' . $file, $dst . '/' . $file);
+                        self::createProject($src . '/' . $file, $dst . '/' . $file);
                     } else {
                         copy($src . '/' . $file, $dst . '/' . $file);
                     }
@@ -198,19 +143,17 @@ class NewCommand extends CommandLine implements ICommandHandler
             $list = scandir($root . '/templates');
         }
 
-        $metadata[] = ['name' => 'console', 'description' => 'DevNet Console Applicatinon'];
-        $maxLenth   = 7; // the initial max length is the length the word "console"
-
+        $maxLenth = 0;
         foreach ($list as $name) {
             if (file_exists($root . '/templates/' . $name . '/composer.json')) {
                 $json    = file_get_contents($root . '/templates/' . $name . '/composer.json');
                 $project = json_decode($json);
 
-                if ($name == 'web-template' || $name == 'mvc-template') {
+                if ($name == 'console-template' || $name == 'web-template' || $name == 'mvc-template') {
                     $name = strstr($name, '-', true);
                 }
 
-                $lenth   = strlen($name);
+                $lenth = strlen($name);
                 if ($lenth > $maxLenth) {
                     $maxLenth = $lenth;
                 }
