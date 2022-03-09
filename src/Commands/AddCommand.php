@@ -271,7 +271,7 @@ class AddCommand extends CommandLine implements ICommandHandler
         $context->appendLine('    public function up(MigrationBuilder $builder): void');
         $context->appendLine('    {');
         $context->appendLine('        $builder->createTable(\'MyTable\', function ($table) {;');
-        $context->appendLine('            $table->column(\'Id\')->type(\'integer\')->nullable(false)->identity();');
+        $context->appendLine('            $table->column(\'Id\')->type(\'integer\')->identity();');
         $context->appendLine('            $table->primaryKey(\'Id\');');
         $context->appendLine('        });');
         $context->appendLine('    }');
