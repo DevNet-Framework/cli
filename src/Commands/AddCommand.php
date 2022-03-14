@@ -84,9 +84,6 @@ class AddCommand extends CommandLine implements ICommandHandler
             case 'controller':
                 $result = self::createController($namespace, $className, $basePath);
                 break;
-            case 'entity':
-                $result = self::createEntity($namespace, $className, $basePath);
-                break;
             case 'migration':
                 $result = self::createMigration($namespace, $className, $basePath);
                 break;
@@ -127,15 +124,8 @@ class AddCommand extends CommandLine implements ICommandHandler
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine('use DevNet\System\Collections\ArrayList;');
-        $context->appendLine('use DevNet\System\Linq;');
-        $context->appendLine();
         $context->appendLine("class {$className}");
         $context->appendLine('{');
-        $context->appendLine('    public function __construct()');
-        $context->appendLine('    {');
-        $context->appendLine('        // code...');
-        $context->appendLine('    }');
         $context->appendLine('}');
 
         if (!is_dir($destination)) {
@@ -177,58 +167,6 @@ class AddCommand extends CommandLine implements ICommandHandler
         $context->appendLine('    public function index(): IActionResult');
         $context->appendLine('    {');
         $context->appendLine('        return $this->view();');
-        $context->appendLine('    }');
-        $context->appendLine('}');
-
-        if (!is_dir($destination)) {
-            mkdir($destination, 0777, true);
-        }
-
-        $myfile = fopen($destination . '/' . $className . '.php', 'w');
-        $size   = fwrite($myfile, $context->__toString());
-        $status = fclose($myfile);
-
-        if ($size && $status) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static function createEntity(string $namespace, ?string $className, ?string $basePath): bool
-    {
-        $basePath    = $basePath ?? 'Models';
-        $destination = implode('/', [getcwd(), $basePath]);
-        $namespace   = implode('\\', [$namespace, $basePath]);
-        $namespace   = str_replace('/', '\\', $namespace);
-        $namespace   = rtrim($namespace, '\\');
-        $namespace   = ucwords($namespace, '\\');
-        $className   = $className ?? 'MyEntity';
-        $className   = ucfirst($className);
-
-        $context = new StringBuilder();
-        $context->appendLine('<?php');
-        $context->appendLine();
-        $context->appendLine("namespace {$namespace};");
-        $context->appendLine();
-        $context->appendLine('use DevNet\Entity\IEntity;');
-        $context->appendLine();
-        $context->appendLine("class {$className} implements IEntity");
-        $context->appendLine('{');
-        $context->appendLine('    private int $Id;');
-        $context->appendLine();
-        $context->appendLine('    public function __get(string $name)');
-        $context->appendLine('    {');
-        $context->appendLine('        return $this->$name;');
-        $context->appendLine('    }');
-        $context->appendLine();
-        $context->appendLine('    public function __set(string $name, $value)');
-        $context->appendLine('    {');
-        $context->appendLine('        if (!property_exists($this, $name))');
-        $context->appendLine('        {');
-        $context->appendLine('            throw new \Exception("The property {$name} doesn\'t exist.");');
-        $context->appendLine('        }');
-        $context->appendLine('        $this->$name = $value;');
         $context->appendLine('    }');
         $context->appendLine('}');
 
@@ -309,7 +247,6 @@ class AddCommand extends CommandLine implements ICommandHandler
         Console::writeline('templates:');
         Console::writeline('  class       Simple Class');
         Console::writeline('  controller  Controller Class');
-        Console::writeline('  entity      Entity Class');
         Console::writeline('  migration   Migration Class');
         Console::writeline();
         exit;
