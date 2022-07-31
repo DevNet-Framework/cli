@@ -14,7 +14,6 @@ use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
 use DevNet\System\Command\CommandOption;
 use DevNet\System\Command\ICommandHandler;
-use DevNet\System\Text\StringBuilder;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
@@ -39,8 +38,6 @@ class NewCommand extends CommandLine implements ICommandHandler
             exit;
         }
 
-        $namespace = "Application";
-        $className = "Program";
         $basePath  = null;
         $template  = $args->get('template');
         $help      = $args->get('--help');
@@ -143,7 +140,12 @@ class NewCommand extends CommandLine implements ICommandHandler
             $list = scandir($root . '/templates');
         }
 
+        // remove current and back directory references (. , ..)
+        array_shift($list);
+        array_shift($list);
+
         $maxLenth = 0;
+        $metadata = [];
         foreach ($list as $name) {
             if (file_exists($root . '/templates/' . $name . '/composer.json')) {
                 $json    = file_get_contents($root . '/templates/' . $name . '/composer.json');
