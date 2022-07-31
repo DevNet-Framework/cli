@@ -159,10 +159,10 @@ class AddCommand extends CommandLine implements ICommandHandler
         $context->appendLine();
         $context->appendLine("namespace {$namespace};");
         $context->appendLine();
-        $context->appendLine('use DevNet\Web\Controller\ActionController;');
+        $context->appendLine('use DevNet\Web\Controller\AbstractController;');
         $context->appendLine('use DevNet\Web\Controller\IActionResult;');
         $context->appendLine();
-        $context->appendLine("class {$className} extends ActionController");
+        $context->appendLine("class {$className} extends AbstractController");
         $context->appendLine('{');
         $context->appendLine('    public function index(): IActionResult');
         $context->appendLine('    {');
@@ -208,15 +208,10 @@ class AddCommand extends CommandLine implements ICommandHandler
         $context->appendLine('{');
         $context->appendLine('    public function up(MigrationBuilder $builder): void');
         $context->appendLine('    {');
-        $context->appendLine('        $builder->createTable(\'MyTable\', function ($table) {;');
-        $context->appendLine('            $table->column(\'Id\')->type(\'integer\')->identity();');
-        $context->appendLine('            $table->primaryKey(\'Id\');');
-        $context->appendLine('        });');
         $context->appendLine('    }');
         $context->appendLine();
         $context->appendLine('    public function down(MigrationBuilder $builder): void');
         $context->appendLine('    {');
-        $context->appendLine('        $builder->dropTable(\'MyTable\');');
         $context->appendLine('    }');
         $context->appendLine('}');
 
