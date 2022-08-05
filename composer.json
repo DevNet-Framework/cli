@@ -1,6 +1,6 @@
 {
     "name": "devnet/cli",
-    "description": "The DevNet Command Line Interpreter",
+    "description": "The DevNet Command Line Interface",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -10,10 +10,8 @@
         }
     ],
     "require": {
-        "php": ">=7.4.0",
-        "devnet/core": "1.0.*",
-        "devnet/installer": "1.0.*",
-        "devnet/console-template": "1.0.*"
+        "php": "7.4 - 8.0",
+        "devnet/core": "1.0.*"
     },
     "bin": [
         "bin/devnet"
