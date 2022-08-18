@@ -30,7 +30,7 @@ class Program
         $rootCommand->addCommand(new MigrateCommand);
         $rootCommand->addOption(new CommandOption('--help', '-h'));
         $rootCommand->addOption(new CommandOption('--version', '-v'));
-        $rootCommand->Handler->add(new self, 'execute');
+        $rootCommand->Handler->add([new self, 'execute']);
         $rootCommand->invoke($args);
         exit;
     }
