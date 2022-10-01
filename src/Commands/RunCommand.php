@@ -9,81 +9,112 @@
 
 namespace DevNet\Cli\Commands;
 
-use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
-use DevNet\System\Command\CommandOption;
-use DevNet\System\Command\ICommandHandler;
+use DevNet\System\Command\Help\HelpBuilder;
+use DevNet\System\Command\Parsing\Parser;
 use DevNet\System\Runtime\LauncherProperties;
 use DevNet\System\Runtime\MainMethodRunner;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
-class RunCommand extends CommandLine implements ICommandHandler
+class RunCommand extends CommandLine
 {
     public function __construct()
     {
-        $this->setName('run');
-        $this->setDescription('Run DevNet Application.');
-        $this->addOption(new CommandOption('--help', '-h'));
-        $this->addOption(new CommandOption('--project', '-p'));
-        $this->addHandler($this);
+        parent::__construct('run', 'Run a DevNet project');
+
+        $this->addOption('--project', "Path to the project file to run, by default 'project.phproj' in current directory", '-p');
     }
 
-    public function execute(object $sender, CommandEventArgs $args): void
+    public function invoke(array $args): void
     {
-        $workspace =  getcwd();
-        $mainClass = "Application\Program";
-        $loader    = LauncherProperties::getLoader();
-        $help      = $args->get('--help');
+        $parser = new Parser();
 
-        if ($help) {
-            $this->showHelp();
+        foreach ($this->getarguments() as $argument) {
+            $parser->addArgument($argument);
         }
 
-        $inputs  = $args->Inputs;
-        $project = $args->get('--project');
+        foreach ($this->getoptions() as $option) {
+            $parser->addOption($option);
+        }
+
+        $result = $parser->parse($args);
+        $parameters = $result->getOptions();
+
+        $help = $parameters['--help'] ?? null;
+        if ($help) {
+            $help = new HelpBuilder($this);
+            $help->writeDescription();
+            $help->writeHeading('Usage:');
+            $help->writeLine('  devnet run [options] <additional arguments>');
+            $help->writeLine();
+            $help->writeOptions();
+            $help->writeHeading('Additional Arguments:');
+            $help->writeLine('  Arguments that are passed to the executed application.');
+            $help->writeLine();
+            $help->build()->write();
+            return;
+        }
+
+        $this->execute($parameters, $result->getUnparsedTokens());
+    }
+
+    public function execute(array $parameters, array $arguments): void
+    {
+        $workspace   =  getcwd();
+        $projectPath =  getcwd() . "/project.phproj";
+        $mainClass   = "Application\Program";
+        $loader      = LauncherProperties::getLoader();
+        $project     = $parameters['--project'] ?? null;
 
         if ($project) {
-            if ($project->Value) {
-                $workspace = $project->Value;
-                $loader->setWorkspace($workspace);
-                foreach ($inputs as $key => $arg) {
+            if ($project->getValue()) {
+                $projectPath = $project->getValue();
+                foreach ($arguments as $key => $arg) {
                     if ($arg == $project->Name) {
-                        unset($inputs[$key]);
-                        unset($inputs[$key + 1]);
-                        $inputs = array_values($inputs);
+                        unset($arguments[$key]);
+                        unset($arguments[$key + 1]);
+                        $arguments = array_values($arguments);
                         break;
                     }
                 }
             }
         }
 
-        if (!file_exists($workspace . "/project.phproj")) {
+        if (!file_exists($projectPath)) {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("Couldn't find a project to run in {$workspace}, Ensure if it exists, or pass the correct project path using the option --project.");
+            Console::writeLine("Couldn't find a project to run in {$workspace}, Ensure if it exists, or pass the correct project path using the option --project.");
             Console::resetColor();
-            exit;
+            return;
         }
 
-        $projectFile = simplexml_load_file($workspace . "/project.phproj");
+        $workspace = dirname($projectPath);
+        $loader->setWorkspace($workspace);
 
-        if ($projectFile) {
-            $namespace  = $projectFile->properties->namespace;
-            $entrypoint = $projectFile->properties->entrypoint;
-            $packages   = $projectFile->dependencies->package ?? [];
+        $projectFile = simplexml_load_file($projectPath);
 
-            if ($namespace && $entrypoint) {
-                $namespace  = (string)$namespace;
-                $entrypoint = (string)$entrypoint;
-                $mainClass  = $namespace . "\\" . $entrypoint;
-                $loader->map($namespace, "/");
-            }
+        if (!$projectFile) {
+            Console::foregroundColor(ConsoleColor::Red);
+            Console::writeLine("Project file type not supported!");
+            Console::resetColor();
+            return;
+        }
 
-            foreach ($packages as $package) {
-                $include = (string)$package->attributes()->include;
-                if (file_exists($workspace . '/' . $include)) {
-                    require $workspace . '/' . $include;
-                }
+        $namespace  = $projectFile->properties->namespace;
+        $entrypoint = $projectFile->properties->entrypoint;
+        $packages   = $projectFile->dependencies->package ?? [];
+
+        if ($namespace && $entrypoint) {
+            $namespace  = (string)$namespace;
+            $entrypoint = (string)$entrypoint;
+            $mainClass  = $namespace . "\\" . $entrypoint;
+            $loader->map($namespace, "/");
+        }
+
+        foreach ($packages as $package) {
+            $include = (string)$package->attributes()->include;
+            if (file_exists($workspace . '/' . $include)) {
+                require $workspace . '/' . $include;
             }
         }
 
@@ -91,30 +122,19 @@ class RunCommand extends CommandLine implements ICommandHandler
 
         if (!class_exists($mainClass)) {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("Couldn't find the class {$mainClass} in " . $workspace);
+            Console::writeLine("Couldn't find the class {$mainClass} in " . $workspace);
             Console::resetColor();
             exit;
         }
 
         if (!method_exists($mainClass, 'main')) {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("Couldn't find the main method to run, Ensure it exists in the class {$mainClass}");
+            Console::writeLine("Couldn't find the main method to run, Ensure it exists in the class {$mainClass}");
             Console::resetColor();
             exit;
         }
 
-        $runner = new MainMethodRunner($mainClass, $inputs);
+        $runner = new MainMethodRunner($mainClass, $arguments);
         $runner->run();
-    }
-
-    public function showHelp(): void
-    {
-        Console::writeline("Usage: devnet run [arguments] [options]");
-        Console::writeline();
-        Console::writeline("Options:");
-        Console::writeline("  --help     Displays help for this command.");
-        Console::writeline("  --project  Path to the project to run.");
-        Console::writeline();
-        exit;
     }
 }
