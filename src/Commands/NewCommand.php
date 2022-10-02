@@ -9,92 +9,87 @@
 
 namespace DevNet\Cli\Commands;
 
-use DevNet\System\Command\CommandArgument;
+use DevNet\Cli\Templating\TemplateProvider;
+use DevNet\Cli\Templating\TemplateRegistry;
 use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
-use DevNet\System\Command\CommandOption;
-use DevNet\System\Command\ICommandHandler;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
-class NewCommand extends CommandLine implements ICommandHandler
+class NewCommand extends CommandLine
 {
+    private TemplateRegistry $registry;
+
     public function __construct()
     {
-        $this->setName('new');
-        $this->setDescription('Create a new project.');
-        $this->addArgument(new CommandArgument('template'));
-        $this->addOption(new CommandOption('--help', '-h'));
-        $this->addOption(new CommandOption('--project', '-p'));
-        $this->addHandler($this);
+        parent::__construct('new', 'Create a new DevNet project');
+
+        $this->addArgument('template', 'The template project want to create');
+        $this->addOption('--output', 'Location to place the generated project output', '-o');
+        $this->setHandler($this);
+
+        $this->registry = TemplateRegistry::getSingleton();
+        $this->registry->set('console', new TemplateProvider('console', 'Create a console application', __DIR__ . '/../../template'));
+
+        $this->setHelp(function ($builder) {
+            $builder->useDefaults();
+            $builder->writeHeading('Templates:');
+
+            $rows = [];
+            foreach ($this->registry as $provider) {
+                $rows[$provider->getName()] = $provider->getDescription();
+            }
+
+            $builder->writeRows($rows);
+        });
     }
 
-    public function execute(object $sender, CommandEventArgs $args): void
+    public function __invoke(object $sender, CommandEventArgs $args): void
     {
-        if ($args->Residual) {
-            Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("The specified argument or option is not valid, try '--help' option for usage information.");
-            Console::resetColor();
-            exit;
-        }
+        $path     = null;
+        $template = $args->getParameter('template');
+        $output   = $args->getParameter('--output');
 
-        $basePath  = null;
-        $template  = $args->get('template');
-        $help      = $args->get('--help');
-        $project   = $args->get('--project');
-
-        if ($help) {
-            $this->showHelp();
-        }
-
-        if (!$template || !$template->Value) {
+        if (!$template || !$template->getValue()) {
             Console::foreGroundColor(ConsoleColor::Red);
-            Console::writeline("Template argument is missing!");
+            Console::writeLine("Template argument is missing!");
             Console::resetColor();
-            exit;
+            return;
         }
 
-        if ($project) {
-            if (!$project->Value) {
+        if ($output) {
+            if (!$output->getValue()) {
                 Console::foreGroundColor(ConsoleColor::Red);
-                Console::writeline('Project argument is missing!');
+                Console::writeLine('Directory argument is missing!');
                 Console::resetColor();
-                exit;
+                return;
             }
-            $basePath = $project->Value;
+            $path = $output->getValue();
         }
 
-        $destination  = implode("/", [getcwd(), $basePath]);
-        $templateName = $template->Value ?? '';
+        $destination  = implode("/", [getcwd(), $path]);
+        $templateName = $template->getValue() ?? '';
         $templateName = strtolower($templateName);
+        $provider     = $this->registry->get($templateName);
 
-        $rootDir = dirname(__DIR__, 3);
-        $source  = $rootDir . '/templates/' . $templateName;
-        $result  = false;
-
-        if ($templateName == 'console' || $templateName == 'web' || $templateName == 'mvc') {
-            $source .= '-template';
-        }
-        if (!is_dir($source)) {
+        if (!$provider || !is_dir($provider->getSourcePath())) {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("The template {$templateName} does not exist!");
+            Console::writeLine("The template {$templateName} does not exist!");
             Console::resetColor();
-            exit;
+            return;
         }
 
-        $result = self::createProject($source, $destination);
+        $result = self::createProject($provider->getSourcePath(), $destination);
 
         if ($result) {
             Console::foregroundColor(ConsoleColor::Green);
-            Console::writeline("The {$templateName} project was created successfully.");
+            Console::writeLine("The template {$templateName} project was created successfully.");
             Console::resetColor();
         } else {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("Somthing whent wrong! faild to create {$templateName} template.");
+            Console::writeLine("Somthing whent wrong! faild to create {$templateName} template.");
             Console::resetColor();
         }
-
-        exit;
     }
 
     public static function createProject(string $src, string $dst): bool
@@ -121,58 +116,5 @@ class NewCommand extends CommandLine implements ICommandHandler
         closedir($dir);
 
         return true;
-    }
-
-    public function showHelp()
-    {
-        Console::writeline("Usage: devnet new [template] [options]");
-        Console::writeline();
-        Console::writeline("Options:");
-        Console::writeline("  --help     Displays help for this command.");
-        Console::writeline("  --project  Location of where to place the template project.");
-        Console::writeline();
-        Console::writeline("templates:");
-
-        $root = dirname(__DIR__, 3);
-        $list = [];
-
-        if (is_dir($root . '/templates')) {
-            $list = scandir($root . '/templates');
-        }
-
-        // remove current and back directory references (. , ..)
-        array_shift($list);
-        array_shift($list);
-
-        $maxLenth = 0;
-        $metadata = [];
-        foreach ($list as $name) {
-            if (file_exists($root . '/templates/' . $name . '/composer.json')) {
-                $json    = file_get_contents($root . '/templates/' . $name . '/composer.json');
-                $project = json_decode($json);
-
-                if ($name == 'console-template' || $name == 'web-template' || $name == 'mvc-template') {
-                    $name = strstr($name, '-', true);
-                }
-
-                $lenth = strlen($name);
-                if ($lenth > $maxLenth) {
-                    $maxLenth = $lenth;
-                }
-
-                $metadata[] = ['name' => $name, 'description' => $project->description];
-            }
-        }
-
-        //print template description with auto-alignment
-        foreach ($metadata as $template) {
-            $lenth = strlen($template['name']);
-            $steps = $maxLenth - $lenth + 4;
-            $space = str_repeat(" ", $steps);
-            Console::writeline("  {$template['name']}{$space}{$template['description']}");
-        }
-
-        Console::writeline();
-        exit;
     }
 }
