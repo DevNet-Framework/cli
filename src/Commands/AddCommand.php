@@ -9,131 +9,143 @@
 
 namespace DevNet\Cli\Commands;
 
-use DevNet\System\Command\CommandArgument;
+use DevNet\Cli\Templating\CodeGeneratorProvider;
+use DevNet\Cli\Templating\CodeGeneratorRegistry;
+use DevNet\Cli\Templating\CodeModel;
+use DevNet\Cli\Templating\ICodeGenerator;
 use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
-use DevNet\System\Command\CommandOption;
-use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Text\StringBuilder;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
-class AddCommand extends CommandLine implements ICommandHandler
+class AddCommand extends CommandLine implements ICodeGenerator
 {
+    private CodeGeneratorRegistry $registry;
+
     public function __construct()
     {
-        $this->setName('add');
-        $this->setDescription('Add template class to the project.');
-        $this->addArgument(new CommandArgument('template'));
-        $this->addOption(new CommandOption('--directory', '-d'));
-        $this->addOption(new CommandOption('--name', '-n'));
-        $this->addOption(new CommandOption('--help', '-h'));
-        $this->addHandler($this);
+        parent::__construct('add', 'Add template code to the project.');
+
+        $this->addArgument('template', 'The template code want to generate.');
+        $this->addOption('--output', 'Location to place the generated code output.', '-o');
+        $this->addOption('--name', 'Name of the generated code.', '-n');
+
+        $this->registry = CodeGeneratorRegistry::getSingleton();
+        $this->registry->set('class', new CodeGeneratorProvider('class', 'Generate an empty class file.', $this));
+
+        $this->setHelp(function ($builder) {
+            $builder->useDefaults();
+            $builder->writeHeading('Templates:');
+
+            $rows = [];
+            foreach ($this->registry as $provider) {
+                $rows[$provider->getName()] = $provider->getDescription();
+            }
+
+            $builder->writeRows($rows);
+        });
+
+        $this->setHandler($this);
     }
 
-    public function execute(object $sender, CommandEventArgs $args): void
+    public function __invoke(object $sender, CommandEventArgs $args): void
     {
-        if ($args->Residual) {
-            Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("The specified argument or option is not valid, try '--help' option for usage information.");
-            Console::resetColor();
-            exit;
-        }
-        
-        $namespace = 'Application';
-        $className = null;
-        $basePath  = null;
-        $template  = $args->get('template');
-        $help      = $args->get('--help');
-        $name      = $args->get('--name');
+        $template = $args->getParameter('template');
+        $name     = $args->getParameter('--name');
+        $output   = $args->getParameter('--output');
 
-        if ($help) {
-            $this->showHelp();
-        }
-
-        if (!$template || !$template->Value) {
+        if (!$template || !$template->getValue()) {
             Console::foreGroundColor(ConsoleColor::Red);
-            Console::writeline('Template argument is missing!');
+            Console::writeLine("Template argument is missing!");
             Console::resetColor();
-            exit;
+            return;
         }
 
-        if ($name) {
-            if (!$name->Value) {
+        if (!$name) {
+            Console::foreGroundColor(ConsoleColor::Red);
+            Console::writeLine('The option --name is required!');
+            Console::resetColor();
+            return;
+        }
+
+        if (!$name->getValue()) {
+            Console::foreGroundColor(ConsoleColor::Red);
+            Console::writeLine('The option --name is missing an argument!');
+            Console::resetColor();
+            return;
+        }
+
+        $path = '';
+        $output = $args->getParameter('--output');
+        if ($output) {
+            if (!$output->getValue()) {
                 Console::foreGroundColor(ConsoleColor::Red);
-                Console::writeline('Name argument is missing!');
+                Console::writeLine('The option --output is missing an argument!');
                 Console::resetColor();
-                exit;
+                return;
             }
-            $className = $name->Value;
+            $path = $output->getValue();
+            $path = trim($path, '/');
         }
+    
 
-        $directory = $args->get('--directory');
-        if ($directory) {
-            $basePath = $directory->Value;
-        }
-
-        $templateName = $template->Value ?? '';
+        $templateName = $template->getValue();
         $templateName = strtolower($templateName);
-        $result       = null;
+        $provider     = $this->registry->get($templateName);
+        $generator    = $provider->getGenerator();
 
-        switch ($templateName) {
-            case 'class':
-                $result = self::createClass($namespace, $className, $basePath);
-                break;
-            case 'controller':
-                $result = self::createController($namespace, $className, $basePath);
-                break;
-            case 'migration':
-                $result = self::createMigration($namespace, $className, $basePath);
-                break;
-            default:
-                Console::foreGroundColor(ConsoleColor::Red);
-                Console::writeline("The template {$templateName} not exist!");
+        $parameters[$name->getName()] = $name->getValue();
+        $parameters['--output'] = $path;
+
+        $models = $generator->generate($parameters);
+
+        foreach ($models as $model) {
+            $result = $this->create($model, $path);
+            if (!$result) {
+                Console::foregroundColor(ConsoleColor::Red);
+                Console::writeLine("Somthing whent wrong! faild to create {$template}.");
                 Console::resetColor();
-                exit;
-                break;
-        }
-
-        if (!$result) {
-            Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("Somthing whent wrong! faild to create {$className} class.");
-            Console::resetColor();
-            exit;
+                return;
+            }
         }
 
         Console::foregroundColor(ConsoleColor::Green);
-        Console::writeline("The {$templateName} {$className} was created successfully.");
+        Console::writeLine("The template '{$templateName}' was created successfully.");
         Console::resetColor();
-
-        exit;
     }
 
-    public static function createClass(string $namespace, ?string $className, ?string $basePath): bool
+    public function generate(array $parameters): array
+    {
+        $name      = $parameters['--name'] ?? 'MyClass';
+        $output    = $parameters['--output'] ?? '';
+        $output    = str_replace('/', '\\', $output);
+        $namespace = 'Application\\' . $output;
+        $namespace = trim($namespace, '\\');
+        $namespace = ucwords($namespace, '\\');
+
+        $content = new StringBuilder();
+        $content->appendLine('<?php');
+        $content->appendLine();
+        $content->appendLine("namespace {$namespace};");
+        $content->appendLine();
+        $content->appendLine("class {$name}");
+        $content->appendLine('{');
+        $content->appendLine('}');
+
+        return [new CodeModel($name . '.php', $content)];
+    }
+
+    public function create(CodeModel $model, string $basePath): bool
     {
         $destination = implode('/', [getcwd(), $basePath]);
-        $namespace   = implode('\\', [$namespace, $basePath]);
-        $namespace   = str_replace('/', '\\', $namespace);
-        $namespace   = rtrim($namespace, '\\');
-        $namespace   = ucwords($namespace, '\\');
-        $className   = $className ?? 'MyClass';
-        $className   = ucfirst($className);
-
-        $context = new StringBuilder();
-        $context->appendLine('<?php');
-        $context->appendLine();
-        $context->appendLine("namespace {$namespace};");
-        $context->appendLine();
-        $context->appendLine("class {$className}");
-        $context->appendLine('{');
-        $context->appendLine('}');
 
         if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
         }
 
-        $myfile = fopen($destination . '/' . $className . '.php', 'w');
-        $size   = fwrite($myfile, $context->__toString());
+        $myfile = fopen($destination . '/' . $model->getFileName(), 'w');
+        $size   = fwrite($myfile, $model->getContent());
         $status = fclose($myfile);
 
         if (!$size || !$status) {
@@ -141,109 +153,5 @@ class AddCommand extends CommandLine implements ICommandHandler
         }
 
         return true;
-    }
-
-    public static function createController(string $namespace, ?string $className, ?string $basePath): bool
-    {
-        $basePath    = $basePath ?? 'Controllers';
-        $namespace   = implode('\\', [$namespace, $basePath]);
-        $namespace   = str_replace('/', '\\', $namespace);
-        $namespace   = rtrim($namespace, '\\');
-        $namespace   = ucwords($namespace, '\\');
-        $className   = $className ?? 'MyController';
-        $className   = ucfirst($className);
-        $destination = implode('/', [getcwd(), $basePath]);
-
-        $context = new StringBuilder();
-        $context->appendLine('<?php');
-        $context->appendLine();
-        $context->appendLine("namespace {$namespace};");
-        $context->appendLine();
-        $context->appendLine('use DevNet\Web\Controller\AbstractController;');
-        $context->appendLine('use DevNet\Web\Controller\IActionResult;');
-        $context->appendLine();
-        $context->appendLine("class {$className} extends AbstractController");
-        $context->appendLine('{');
-        $context->appendLine('    public function index(): IActionResult');
-        $context->appendLine('    {');
-        $context->appendLine('        return $this->view();');
-        $context->appendLine('    }');
-        $context->appendLine('}');
-
-        if (!is_dir($destination)) {
-            mkdir($destination, 0777, true);
-        }
-
-        $myfile = fopen($destination . '/' . $className . '.php', 'w');
-        $size   = fwrite($myfile, $context->__toString());
-        $status = fclose($myfile);
-
-        if ($size && $status) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static function createMigration(string $namespace, ?string $className, ?string $basePath): bool
-    {
-        $basePath    = $basePath ?? 'Migrations';
-        $destination = implode('/', [getcwd(), $basePath]);
-        $namespace   = implode('\\', [$namespace, $basePath]);
-        $namespace   = str_replace('/', '\\', $namespace);
-        $namespace   = rtrim($namespace, '\\');
-        $namespace   = ucwords($namespace, '\\');
-        $className   = $className ?? 'MyMigration';
-        $className   = ucfirst($className);
-
-        $context = new StringBuilder();
-        $context->appendLine('<?php');
-        $context->appendLine();
-        $context->appendLine("namespace {$namespace};");
-        $context->appendLine();
-        $context->appendLine('use DevNet\Entity\Migration\AbstractMigration;');
-        $context->appendLine('use DevNet\Entity\Migration\MigrationBuilder;');
-        $context->appendLine();
-        $context->appendLine("class {$className} extends AbstractMigration");
-        $context->appendLine('{');
-        $context->appendLine('    public function up(MigrationBuilder $builder): void');
-        $context->appendLine('    {');
-        $context->appendLine('    }');
-        $context->appendLine();
-        $context->appendLine('    public function down(MigrationBuilder $builder): void');
-        $context->appendLine('    {');
-        $context->appendLine('    }');
-        $context->appendLine('}');
-
-        if (!is_dir($destination)) {
-            mkdir($destination, 0777, true);
-        }
-
-        $myfile = fopen($destination . '/' . date('Ymdhis') . '_' . $className . '.php', 'w');
-        $size   = fwrite($myfile, $context->__toString());
-        $status = fclose($myfile);
-
-        if ($size && $status) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function showHelp()
-    {
-        Console::writeline('Usage: devnet new [template] [options]');
-        Console::writeline();
-        Console::writeline('Options:');
-        Console::writeline('  --help, -h       Displays help for this command.');
-        Console::writeline('  --name, -n       Naming the generated class.');
-        Console::writeline('  --directory, -d  Location of where to place the generated class.');
-        Console::writeline();
-        Console::writeline('templates:');
-        Console::writeline('  class       Simple Class');
-        Console::writeline('  controller  Controller Class');
-        Console::writeline('  migration   Migration Class');
-        Console::writeline();
-        exit;
     }
 }
