@@ -10,12 +10,11 @@
 namespace DevNet\Cli;
 
 use DevNet\Cli\Commands\AddCommand;
-use DevNet\Cli\Commands\MigrateCommand;
 use DevNet\Cli\Commands\NewCommand;
 use DevNet\Cli\Commands\RunCommand;
+use DevNet\Cli\Commands\CommandRegistry;
 use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
-use DevNet\System\Command\CommandOption;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
@@ -23,75 +22,35 @@ class Program
 {
     public static function main(array $args = [])
     {
-        $rootCommand = new CommandLine();
-        $rootCommand->addCommand(new AddCommand);
-        $rootCommand->addCommand(new NewCommand);
-        $rootCommand->addCommand(new RunCommand);
-        $rootCommand->addCommand(new MigrateCommand);
-        $rootCommand->addOption(new CommandOption('--help', '-h'));
-        $rootCommand->addOption(new CommandOption('--version', '-v'));
-        $rootCommand->Handler->add([new self, 'execute']);
-        $rootCommand->invoke($args);
-        exit;
-    }
+        $rootCommand = new CommandLine('devnet', 'DevNet command-line interface');
+        $rootCommand->addOption('--version', 'Show version information', '-v', null);
+        $rootCommand->setHelp(function ($builder) {
+            $builder->useDefaults();
+            $builder->writeLine("Run 'devnet [command] --help' for more information on a command.");
+        });
 
-    public function execute(object $sender, CommandEventArgs $args): void
-    {
-        $help = $args->get('--help');
-        if ($help) {
-            self::showHelp($sender);
-            return;
-        }
-
-        $version = $args->get('--version');
-        if ($version) {
-            self::showVersion();
-            return;
-        }
-
-        if ($args->Residual) {
-            Console::foregroundColor(ConsoleColor::Red);
-            Console::writeline("The specified command or option was not found, try '--help' option for usage information.");
-            Console::resetColor();
-        }
-    }
-
-    public static function showHelp(object $sender): void
-    {
-        Console::writeline("DevNet command-line interface v1.0.0");
-        Console::writeline("Usage: devnet [options]");
-        Console::writeline();
-        Console::writeline("Options:");
-        Console::writeline("  --help      Show command line help.");
-        Console::writeline("  --version   Show DevNet Cli version.");
-        Console::writeline();
-        Console::writeline("Usage: devnet [command] [arguments] [options]");
-        Console::writeline();
-        Console::writeline("commands:");
-        $super = 0;
-        $commands = $sender->Commands;
-
-        foreach ($commands as $command) {
-            $lenth = strlen($command->Name);
-            if ($lenth > $super) {
-                $super = $lenth;
+        $rootCommand->setHandler(function (object $sender, CommandEventArgs $args): void {
+            $version = $args->getParameter('--version');
+            if ($version) {
+                Console::writeline("DevNet CLI: 1.0.0");
+                return;
             }
+
+            Console::foregroundColor(ConsoleColor::Red);
+            Console::writeline("The command 'devnet' cannot be executed alone, try '--help' option for usage information.");
+            Console::resetColor();
+        });
+
+        $provider = CommandRegistry::getSingleton();
+
+        foreach ($provider as $command) {
+            $rootCommand->addCommand($command);
         }
 
-        foreach ($commands as $command) {
-            $lenth = strlen($command->Name);
-            $steps = $super - $lenth + 3;
-            $space = str_repeat(" ", $steps);
-            Console::writeline("  {$command->Name}$space{$command->Description}");
-        }
+        $rootCommand->addCommand(new AddCommand());
+        $rootCommand->addCommand(new NewCommand());
+        $rootCommand->addCommand(new RunCommand());
 
-        Console::writeline();
-        Console::writeline("Run 'devnet [command] --help' for more information on a command.");
-    }
-
-    public static function showVersion(): void
-    {
-        Console::writeline("DevNet command-line interface v1.0.0");
-        Console::writeline("Copyright (c) DevNet");
+        $rootCommand->invoke($args);
     }
 }
