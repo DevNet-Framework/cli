@@ -12,10 +12,9 @@ namespace DevNet\Cli\Commands;
 use DevNet\System\Command\CommandLine;
 use DevNet\System\Command\Help\HelpBuilder;
 use DevNet\System\Command\Parsing\Parser;
-use DevNet\System\Runtime\LauncherProperties;
-use DevNet\System\Runtime\MainMethodRunner;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
+use DevNet\System\Runtime\Launcher;
 
 class RunCommand extends CommandLine
 {
@@ -61,10 +60,9 @@ class RunCommand extends CommandLine
 
     public function execute(array $parameters, array $arguments): void
     {
-        $workspace   =  getcwd();
-        $projectPath =  getcwd() . "/project.phproj";
+        $projectRoot =  getcwd();
+        $projectPath =  $projectRoot . "/project.proj";
         $mainClass   = "Application\Program";
-        $loader      = LauncherProperties::getLoader();
         $project     = $parameters['--project'] ?? null;
 
         if ($project) {
@@ -83,13 +81,10 @@ class RunCommand extends CommandLine
 
         if (!file_exists($projectPath)) {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeLine("Couldn't find a project to run in {$workspace}, Ensure if it exists, or pass the correct project path using the option --project.");
+            Console::writeLine("Couldn't find a project to run in {$projectRoot}, Ensure if it exists, or pass the correct project path using the option --project.");
             Console::resetColor();
             return;
         }
-
-        $workspace = dirname($projectPath);
-        $loader->setWorkspace($workspace);
 
         $projectFile = simplexml_load_file($projectPath);
 
@@ -100,41 +95,31 @@ class RunCommand extends CommandLine
             return;
         }
 
-        $namespace  = $projectFile->properties->namespace;
-        $entrypoint = $projectFile->properties->entrypoint;
-        $packages   = $projectFile->dependencies->package ?? [];
-
-        if ($namespace && $entrypoint) {
-            $namespace  = (string)$namespace;
-            $entrypoint = (string)$entrypoint;
-            $mainClass  = $namespace . "\\" . $entrypoint;
-            $loader->map($namespace, "/");
-        }
+        $projectRoot = dirname($projectPath);
+        $mainClass  = $projectFile->Properties->EntryPoint;
+        $packages   = $projectFile->Dependencies->Package ?? [];
 
         foreach ($packages as $package) {
             $include = (string)$package->attributes()->include;
-            if (file_exists($workspace . '/' . $include)) {
-                require $workspace . '/' . $include;
+            if (file_exists($projectRoot . '/' . $include)) {
+                require $projectRoot . ' /' . $include;
             }
         }
 
-        $mainClass = ucwords($mainClass, "\\");
+        $launcher = new Launcher($projectRoot);
+        $result = $launcher->launch($mainClass, $arguments);
 
-        if (!class_exists($mainClass)) {
-            Console::foregroundColor(ConsoleColor::Red);
-            Console::writeLine("Couldn't find the class {$mainClass} in " . $workspace);
-            Console::resetColor();
-            exit;
+        switch ($result) {
+            case 1:
+                Console::foregroundColor(ConsoleColor::Red);
+                Console::writeLine("Couldn't find the main class {$mainClass} in " . $projectRoot);
+                Console::resetColor();
+                break;
+            case 2:
+                Console::foregroundColor(ConsoleColor::Red);
+                Console::writeLine("Couldn't find the main method to run in the class {$mainClass}");
+                Console::resetColor();
+                break;
         }
-
-        if (!method_exists($mainClass, 'main')) {
-            Console::foregroundColor(ConsoleColor::Red);
-            Console::writeLine("Couldn't find the main method to run, Ensure it exists in the class {$mainClass}");
-            Console::resetColor();
-            exit;
-        }
-
-        $runner = new MainMethodRunner($mainClass, $arguments);
-        $runner->run();
     }
 }
