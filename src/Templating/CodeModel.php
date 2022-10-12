@@ -13,11 +13,13 @@ class CodeModel
 {
     protected string $fileName;
     protected string $content;
+    protected string $relativePath;
 
-    public function __construct(string $fileName, string $content)
+    public function __construct(string $fileName, string $content, string $relativePath = '')
     {
         $this->fileName = $fileName;
         $this->content = $content;
+        $this->relativePath = $relativePath;
     }
 
     public function getFileName(): string
@@ -28,5 +30,10 @@ class CodeModel
     public function getContent(): string
     {
         return $this->content;
+    }
+
+    public function getRelativePath(): string
+    {
+        return $this->relativePath;
     }
 }
