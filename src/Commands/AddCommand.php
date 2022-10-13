@@ -76,7 +76,7 @@ class AddCommand extends CommandLine implements ICodeGenerator
             return;
         }
 
-        $path = '';
+        $parameters[$name->getName()] = $name->getValue();
         $output = $args->getParameter('--output');
         if ($output) {
             if (!$output->getValue()) {
@@ -85,23 +85,18 @@ class AddCommand extends CommandLine implements ICodeGenerator
                 Console::resetColor();
                 return;
             }
-            $path = $output->getValue();
-            $path = trim($path, '/');
+            $parameters[$output->getName()] = $output->getValue();
         }
     
-
         $templateName = $template->getValue();
         $templateName = strtolower($templateName);
         $provider     = $this->registry->get($templateName);
         $generator    = $provider->getGenerator();
 
-        $parameters[$name->getName()] = $name->getValue();
-        $parameters['--output'] = $path;
-
         $models = $generator->generate($parameters);
 
         foreach ($models as $model) {
-            $result = $this->create($model, $path);
+            $result = $this->create($model);
             if (!$result) {
                 Console::foregroundColor(ConsoleColor::Red);
                 Console::writeLine("Somthing whent wrong! faild to create {$template}.");
@@ -136,9 +131,9 @@ class AddCommand extends CommandLine implements ICodeGenerator
         return [new CodeModel($name . '.php', $content)];
     }
 
-    public function create(CodeModel $model, string $basePath): bool
+    public function create(CodeModel $model): bool
     {
-        $destination = implode('/', [getcwd(), $basePath]);
+        $destination = implode('/', [getcwd(), $model->getRelativePath()]);
 
         if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
