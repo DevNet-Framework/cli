@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<Project>
+  <Properties>
+    <EntryPoint>Application\Program</EntryPoint>
+  </Properties>
+</Project>
