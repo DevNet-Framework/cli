@@ -86,28 +86,16 @@ class RunCommand extends CommandLine
             return;
         }
 
-        $projectFile = simplexml_load_file($projectPath);
+        $launcher = Launcher::initialize($projectPath);
 
-        if (!$projectFile) {
+        if (!$launcher) {
             Console::foregroundColor(ConsoleColor::Red);
-            Console::writeLine("Project file type not supported!");
+            Console::writeLine("Invalid project file format!");
             Console::resetColor();
             return;
         }
 
-        $projectRoot = dirname($projectPath);
-        $mainClass  = $projectFile->Properties->EntryPoint;
-        $packages   = $projectFile->Dependencies->Package ?? [];
-
-        foreach ($packages as $package) {
-            $include = (string)$package->attributes()->include;
-            if (file_exists($projectRoot . '/' . $include)) {
-                require $projectRoot . ' /' . $include;
-            }
-        }
-
-        $launcher = new Launcher($projectRoot);
-        $result = $launcher->launch($mainClass, $arguments);
+        $result = $launcher->launch($arguments);
 
         switch ($result) {
             case 1:
