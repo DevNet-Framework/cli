@@ -22,7 +22,7 @@ class RunCommand extends CommandLine
     {
         parent::__construct('run', 'Run a DevNet project');
 
-        $this->addOption('--project', "Path to the project file to run, by default 'project.phproj' in current directory", '-p');
+        $this->addOption('--project', "Path to the project file to run, by default 'devnet.proj' in current directory", '-p');
     }
 
     public function invoke(array $args): void
@@ -61,7 +61,7 @@ class RunCommand extends CommandLine
     public function execute(array $parameters, array $arguments): void
     {
         $projectRoot =  getcwd();
-        $projectPath =  $projectRoot . "/project.proj";
+        $projectPath =  $projectRoot . "/devnet.proj";
         $mainClass   = "Application\Program";
         $project     = $parameters['--project'] ?? null;
 
