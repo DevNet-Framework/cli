@@ -2,7 +2,7 @@
 This dependency is a part of **DevNet Framework**, a command-line Interface tool, for managing DevNet projects.
 
 ## Requirements
-- [PHP](https://www.php.net/) version 8.0 or higher
+- [DevNet Core](https://github.com/DevNet-Framework/core/) version 1.0
 - [Composer](https://getcomposer.org/) version 2.0 or higher
 
 ## Installation
