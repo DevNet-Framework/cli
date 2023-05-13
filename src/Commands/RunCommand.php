@@ -80,7 +80,7 @@ class RunCommand extends CommandLine
         }
 
         if (!file_exists($projectPath)) {
-            Console::foregroundColor(ConsoleColor::Red);
+            Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine("Couldn't find a project to run in {$projectRoot}, Ensure if it exists, or pass the correct project path using the option --project.");
             Console::resetColor();
             return;
@@ -89,7 +89,7 @@ class RunCommand extends CommandLine
         $launcher = Launcher::initialize($projectPath);
 
         if (!$launcher) {
-            Console::foregroundColor(ConsoleColor::Red);
+            Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine("Invalid project file format!");
             Console::resetColor();
             return;
@@ -99,12 +99,12 @@ class RunCommand extends CommandLine
 
         switch ($result) {
             case 1:
-                Console::foregroundColor(ConsoleColor::Red);
+                Console::$ForegroundColor = ConsoleColor::Red;
                 Console::writeLine("Couldn't find the main class {$mainClass} in " . $projectRoot);
                 Console::resetColor();
                 break;
             case 2:
-                Console::foregroundColor(ConsoleColor::Red);
+                Console::$ForegroundColor = ConsoleColor::Red;
                 Console::writeLine("Couldn't find the main method to run in the class {$mainClass}");
                 Console::resetColor();
                 break;

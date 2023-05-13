@@ -36,7 +36,7 @@ class Program
                 return;
             }
 
-            Console::foregroundColor(ConsoleColor::Red);
+            Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeline("The command 'devnet' cannot be executed alone, try '--help' option for usage information.");
             Console::resetColor();
         });

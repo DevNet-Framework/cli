@@ -56,21 +56,21 @@ class AddCommand extends CommandLine implements ICodeGenerator
         $output   = $args->getParameter('--output');
 
         if (!$template || !$template->getValue()) {
-            Console::foreGroundColor(ConsoleColor::Red);
+            Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine("Template argument is missing!");
             Console::resetColor();
             return;
         }
 
         if (!$name) {
-            Console::foreGroundColor(ConsoleColor::Red);
+            Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine('The option --name is required!');
             Console::resetColor();
             return;
         }
 
         if (!$name->getValue()) {
-            Console::foreGroundColor(ConsoleColor::Red);
+            Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine('The option --name is missing an argument!');
             Console::resetColor();
             return;
@@ -80,14 +80,14 @@ class AddCommand extends CommandLine implements ICodeGenerator
         $output = $args->getParameter('--output');
         if ($output) {
             if (!$output->getValue()) {
-                Console::foreGroundColor(ConsoleColor::Red);
+                Console::$ForegroundColor = ConsoleColor::Red;
                 Console::writeLine('The option --output is missing an argument!');
                 Console::resetColor();
                 return;
             }
             $parameters[$output->getName()] = $output->getValue();
         }
-    
+
         $templateName = $template->getValue();
         $templateName = strtolower($templateName);
         $provider     = $this->registry->get($templateName);
@@ -98,14 +98,14 @@ class AddCommand extends CommandLine implements ICodeGenerator
         foreach ($models as $model) {
             $result = $this->create($model);
             if (!$result) {
-                Console::foregroundColor(ConsoleColor::Red);
+                Console::$ForegroundColor = ConsoleColor::Red;
                 Console::writeLine("Somthing whent wrong! faild to create {$template}.");
                 Console::resetColor();
                 return;
             }
         }
 
-        Console::foregroundColor(ConsoleColor::Green);
+        Console::$ForegroundColor = ConsoleColor::Green;
         Console::writeLine("The template '{$templateName}' was created successfully.");
         Console::resetColor();
     }

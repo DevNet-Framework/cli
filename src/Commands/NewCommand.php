@@ -51,7 +51,7 @@ class NewCommand extends CommandLine
         $output   = $args->getParameter('--output');
 
         if (!$template || !$template->getValue()) {
-            Console::foreGroundColor(ConsoleColor::Red);
+            Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine("Template argument is missing!");
             Console::resetColor();
             return;
@@ -59,7 +59,7 @@ class NewCommand extends CommandLine
 
         if ($output) {
             if (!$output->getValue()) {
-                Console::foreGroundColor(ConsoleColor::Red);
+                Console::$ForegroundColor = ConsoleColor::Red;
                 Console::writeLine('Directory argument is missing!');
                 Console::resetColor();
                 return;
@@ -73,7 +73,7 @@ class NewCommand extends CommandLine
         $provider     = $this->registry->get($templateName);
 
         if (!$provider || !is_dir($provider->getSourcePath())) {
-            Console::foregroundColor(ConsoleColor::Red);
+            Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine("The template {$templateName} does not exist!");
             Console::resetColor();
             return;
@@ -82,11 +82,11 @@ class NewCommand extends CommandLine
         $result = self::createProject($provider->getSourcePath(), $destination);
 
         if ($result) {
-            Console::foregroundColor(ConsoleColor::Green);
+            Console::$ForegroundColor = ConsoleColor::Green;
             Console::writeLine("The template {$templateName} project was created successfully.");
             Console::resetColor();
         } else {
-            Console::foregroundColor(ConsoleColor::Red);
+            Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine("Somthing whent wrong! faild to create {$templateName} template.");
             Console::resetColor();
         }
