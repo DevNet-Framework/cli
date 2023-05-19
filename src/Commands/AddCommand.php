@@ -15,11 +15,12 @@ use DevNet\Cli\Templating\CodeModel;
 use DevNet\Cli\Templating\ICodeGenerator;
 use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
+use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Text\StringBuilder;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
-class AddCommand extends CommandLine implements ICodeGenerator
+class AddCommand extends CommandLine implements ICommandHandler, ICodeGenerator
 {
     private CodeGeneratorRegistry $registry;
 
@@ -45,23 +46,19 @@ class AddCommand extends CommandLine implements ICodeGenerator
 
             $builder->writeRows($rows);
         });
-
-        $this->setHandler($this);
     }
 
-    public function __invoke(object $sender, CommandEventArgs $args): void
+    public function onExecute(object $sender, CommandEventArgs $args): void
     {
-        $template = $args->getParameter('template');
-        $name     = $args->getParameter('--name');
-        $output   = $args->getParameter('--output');
-
-        if (!$template || !$template->getValue()) {
+        $template = $args->get('template');
+        if (!$template || !$template->Value) {
             Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine("Template argument is missing!");
             Console::resetColor();
             return;
         }
 
+        $name = $args->get('--name');
         if (!$name) {
             Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine('The option --name is required!');
@@ -69,26 +66,26 @@ class AddCommand extends CommandLine implements ICodeGenerator
             return;
         }
 
-        if (!$name->getValue()) {
+        if (!$name->Value) {
             Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine('The option --name is missing an argument!');
             Console::resetColor();
             return;
         }
 
-        $parameters[$name->getName()] = $name->getValue();
-        $output = $args->getParameter('--output');
+        $parameters[$name->Name] = $name->Value;
+        $output = $args->get('--output');
         if ($output) {
-            if (!$output->getValue()) {
+            if (!$output->Value) {
                 Console::$ForegroundColor = ConsoleColor::Red;
                 Console::writeLine('The option --output is missing an argument!');
                 Console::resetColor();
                 return;
             }
-            $parameters[$output->getName()] = $output->getValue();
+            $parameters[$output->Name] = $output->Value;
         }
 
-        $templateName = $template->getValue();
+        $templateName = $template->Value;
         $templateName = strtolower($templateName);
         $provider     = $this->registry->get($templateName);
         $generator    = $provider->getGenerator();

@@ -9,7 +9,7 @@
 
 namespace DevNet\Cli\Commands;
 
-use DevNet\System\Command\ICommand;
+use DevNet\System\Command\CommandLine;
 
 class CommandRegistry extends AbstractRegistry
 {
@@ -18,7 +18,7 @@ class CommandRegistry extends AbstractRegistry
     public static function getSingleton(): static
     {
         if (!static::$instance) {
-            static::$instance = new CommandRegistry(ICommand::class);
+            static::$instance = new CommandRegistry(CommandLine::class);
         }
 
         return static::$instance;

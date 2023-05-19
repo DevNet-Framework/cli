@@ -13,10 +13,11 @@ use DevNet\Cli\Templating\TemplateProvider;
 use DevNet\Cli\Templating\TemplateRegistry;
 use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
+use DevNet\System\Command\ICommandHandler;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
 
-class NewCommand extends CommandLine
+class NewCommand extends CommandLine implements ICommandHandler
 {
     private TemplateRegistry $registry;
 
@@ -26,7 +27,6 @@ class NewCommand extends CommandLine
 
         $this->addArgument('template', 'The template project want to create');
         $this->addOption('--output', 'Location to place the generated project output', '-o');
-        $this->setHandler($this);
 
         $this->registry = TemplateRegistry::getSingleton();
         $this->registry->set('console', new TemplateProvider('console', 'Create a console application', __DIR__ . '/../../template'));
@@ -44,31 +44,30 @@ class NewCommand extends CommandLine
         });
     }
 
-    public function __invoke(object $sender, CommandEventArgs $args): void
+    public function onExecute(object $sender, CommandEventArgs $args): void
     {
-        $path     = null;
-        $template = $args->getParameter('template');
-        $output   = $args->getParameter('--output');
-
-        if (!$template || !$template->getValue()) {
+        $template = $args->get('template');
+        if (!$template || !$template->Value) {
             Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine("Template argument is missing!");
             Console::resetColor();
             return;
         }
 
+        $path = null;
+        $output = $args->get('--output');
         if ($output) {
-            if (!$output->getValue()) {
+            if (!$output->Value) {
                 Console::$ForegroundColor = ConsoleColor::Red;
                 Console::writeLine('Directory argument is missing!');
                 Console::resetColor();
                 return;
             }
-            $path = $output->getValue();
+            $path = $output->Value;
         }
 
         $destination  = implode("/", [getcwd(), $path]);
-        $templateName = $template->getValue() ?? '';
+        $templateName = $template->Value ?? '';
         $templateName = strtolower($templateName);
         $provider     = $this->registry->get($templateName);
 

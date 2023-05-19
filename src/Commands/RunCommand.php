@@ -29,11 +29,11 @@ class RunCommand extends CommandLine
     {
         $parser = new Parser();
 
-        foreach ($this->getarguments() as $argument) {
+        foreach ($this->Arguments as $argument) {
             $parser->addArgument($argument);
         }
 
-        foreach ($this->getoptions() as $option) {
+        foreach ($this->Options as $option) {
             $parser->addOption($option);
         }
 
@@ -66,8 +66,8 @@ class RunCommand extends CommandLine
         $project     = $parameters['--project'] ?? null;
 
         if ($project) {
-            if ($project->getValue()) {
-                $projectPath = $project->getValue();
+            if ($project->Value) {
+                $projectPath = $project->Value;
                 foreach ($arguments as $key => $arg) {
                     if ($arg == $project->Name) {
                         unset($arguments[$key]);

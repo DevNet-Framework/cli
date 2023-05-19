@@ -23,14 +23,14 @@ class Program
     public static function main(array $args = [])
     {
         $rootCommand = new CommandLine('devnet', 'DevNet command-line interface');
-        $rootCommand->addOption('--version', 'Show version information', '-v', null);
+        $rootCommand->addOption('--version', 'Show version information', '-v');
         $rootCommand->setHelp(function ($builder) {
             $builder->useDefaults();
             $builder->writeLine("Run 'devnet [command] --help' for more information on a command.");
         });
 
         $rootCommand->setHandler(function (object $sender, CommandEventArgs $args): void {
-            $version = $args->getParameter('--version');
+            $version = $args->get('--version');
             if ($version) {
                 Console::writeline("DevNet CLI: 1.0.0");
                 return;
