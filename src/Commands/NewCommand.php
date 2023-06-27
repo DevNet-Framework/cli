@@ -29,7 +29,8 @@ class NewCommand extends CommandLine implements ICommandHandler
         $this->addOption('--output', 'Location to place the generated project output', '-o');
 
         $this->registry = TemplateRegistry::getSingleton();
-        $this->registry->set('console', new TemplateProvider('console', 'Create a console application', __DIR__ . '/../../template'));
+        $this->registry->set('console', new TemplateProvider('console', 'Console application.', __DIR__ . '/../../templates/console'));
+        $this->registry->set('web', new TemplateProvider('web', 'DevNet web application.', __DIR__ . '/../../templates/web'));
 
         $this->setHelp(function ($builder) {
             $builder->useDefaults();
