@@ -87,7 +87,7 @@ class NewCommand extends CommandLine implements ICommandHandler
             Console::resetColor();
         } else {
             Console::$ForegroundColor = ConsoleColor::Red;
-            Console::writeLine("Somthing whent wrong! faild to create {$templateName} template.");
+            Console::writeLine("Something went wrong! failed to create {$templateName} template.");
             Console::resetColor();
         }
     }

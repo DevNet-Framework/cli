@@ -136,9 +136,9 @@ class AddCommand extends CommandLine implements ICommandHandler, ICodeGenerator
             mkdir($destination, 0777, true);
         }
 
-        $myfile = fopen($destination . '/' . $model->getFileName(), 'w');
-        $size   = fwrite($myfile, $model->getContent());
-        $status = fclose($myfile);
+        $file = fopen($destination . '/' . $model->getFileName(), 'w');
+        $size   = fwrite($file, $model->getContent());
+        $status = fclose($file);
 
         if (!$size || !$status) {
             return false;

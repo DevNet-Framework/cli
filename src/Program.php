@@ -32,12 +32,12 @@ class Program
         $rootCommand->setHandler(function (object $sender, CommandEventArgs $args): void {
             $version = $args->get('--version');
             if ($version) {
-                Console::writeline("DevNet CLI: 1.0.0");
+                Console::writeLine("DevNet CLI: 1.0.0");
                 return;
             }
 
             Console::$ForegroundColor = ConsoleColor::Red;
-            Console::writeline("The command 'devnet' cannot be executed alone, try '--help' option for usage information.");
+            Console::writeLine("The command 'devnet' cannot be executed alone, try '--help' option for usage information.");
             Console::resetColor();
         });
 
