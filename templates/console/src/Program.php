@@ -8,6 +8,6 @@ class Program
 {
     public static function main(array $args = [])
     {
-        Console::writeline("Hello World!");
+        Console::writeLine("Hello World!");
     }
 }

@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <Project>
   <Properties>
-    <EntryPoint>Application\Program</EntryPoint>
+    <StartupObject>Application\Program</StartupObject>
+    <RootNamespace>Application</RootNamespace>
   </Properties>
-  <Dependencies>
-    <Package include="vendor/autoload.php"/>
-  </Dependencies>
 </Project>
