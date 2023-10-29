@@ -19,6 +19,13 @@ use DevNet\System\Command\ICommandHandler;
 use DevNet\System\Text\StringBuilder;
 use DevNet\System\IO\ConsoleColor;
 use DevNet\System\IO\Console;
+use DevNet\System\IO\FileAccess;
+use DevNet\System\IO\FileException;
+use DevNet\System\IO\FileMode;
+use DevNet\System\IO\FileStream;
+use DevNet\System\Runtime\ClassLoader;
+use DirectoryIterator;
+use ReflectionClass;
 
 class AddCommand extends CommandLine implements ICommandHandler, ICodeGenerator
 {
@@ -85,21 +92,56 @@ class AddCommand extends CommandLine implements ICommandHandler, ICodeGenerator
             $parameters[$output->Name] = $output->Value;
         }
 
+        $prefix      = 'Application';
+        $sourceRoot  = getcwd();
+        $projectPath = $sourceRoot . '/devnet.proj';
+
+        // gets root namespace from the project file and the source route related to the entrypoint location.
+        if (is_file($projectPath)) {
+            $projectFile = simplexml_load_file($projectPath);
+            if ($projectFile) {
+                $prefix = $projectFile->Properties->RootNamespace ?? $prefix;
+                $startupObject = $projectFile->Properties->StartupObject ?? 'Application\\Program';
+                $loader = new ClassLoader($sourceRoot);
+                foreach (new DirectoryIterator($sourceRoot) as $dir) {
+                    if ($dir->isDir() && !str_starts_with($dir->getFilename(), '.')) {
+                        $loader->map($prefix, '/' . $dir);
+                    }
+                }
+
+                $loader->register();
+                if (class_exists($startupObject)) {
+                    $entryPointClass = new ReflectionClass((string)$startupObject);
+                    $sourceRoot = dirname($entryPointClass->getFileName());
+                }
+            }
+        }
+
+        $parameters['--prefix'] = $prefix;
+
         $templateName = $template->Value;
         $templateName = strtolower($templateName);
         $provider     = $this->registry->get($templateName);
         $generator    = $provider->getGenerator();
-
-        $models = $generator->generate($parameters);
+        $models       = $generator->generate($parameters);
+        $result       = 0;
 
         foreach ($models as $model) {
-            $result = $this->create($model);
-            if (!$result) {
+            try {
+                $result = $this->create($model, $sourceRoot);
+            } catch (FileException $exception) {
                 Console::$ForegroundColor = ConsoleColor::Red;
-                Console::writeLine("Somthing whent wrong! faild to create {$template}.");
+                Console::writeLine($exception->getMessage());
                 Console::resetColor();
                 return;
             }
+        }
+
+        if (!$result) {
+            Console::$ForegroundColor = ConsoleColor::Red;
+            Console::writeLine("Something went wrong! failed to create {$template}.");
+            Console::resetColor();
+            return;
         }
 
         Console::$ForegroundColor = ConsoleColor::Green;
@@ -111,10 +153,9 @@ class AddCommand extends CommandLine implements ICommandHandler, ICodeGenerator
     {
         $name      = $parameters['--name'] ?? 'MyClass';
         $output    = $parameters['--output'] ?? '';
-        $output    = str_replace('/', '\\', $output);
-        $namespace = 'Application\\' . $output;
+        $namespace = $parameters['--prefix'] ?? 'Application';
+        $namespace = $namespace .'\\' . str_replace('/', '\\', $output);
         $namespace = trim($namespace, '\\');
-        $namespace = ucwords($namespace, '\\');
 
         $content = new StringBuilder();
         $content->appendLine('<?php');
@@ -125,25 +166,20 @@ class AddCommand extends CommandLine implements ICommandHandler, ICodeGenerator
         $content->appendLine('{');
         $content->appendLine('}');
 
-        return [new CodeModel($name . '.php', $content)];
+        return [new CodeModel($name . '.php', $content, $output)];
     }
 
-    public function create(CodeModel $model): bool
+    public function create(CodeModel $model, string $sourceRoot): int
     {
-        $destination = implode('/', [getcwd(), $model->getRelativePath()]);
-
+        $destination = implode('/', [$sourceRoot, $model->getRelativePath()]);
         if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
         }
 
-        $file = fopen($destination . '/' . $model->getFileName(), 'w');
-        $size   = fwrite($file, $model->getContent());
-        $status = fclose($file);
+        $file = new FileStream($destination . '/' . $model->getFileName(), FileMode::Create, FileAccess::Write);
+        $size = $file->write($model->getContent());
+        $file->close();
 
-        if (!$size || !$status) {
-            return false;
-        }
-
-        return true;
+        return $size;
     }
 }
