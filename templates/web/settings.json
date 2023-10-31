@@ -1,7 +1,11 @@
 {
-    "database": {
-        "connection": "//username:password@127.0.0.1/database",
-        "charset": "utf-8"
+    "Logging": {
+        "LogLevel": {
+            "Default": "Information"
+        }
     },
-    "environment" : "production"
+    "Database": {
+        "ProviderType": "DevNet\\Entity\\MySql\\MySqlDataProvider",
+        "ConnectionString": "//username:password@127.0.0.1/database"
+    }
 }
