@@ -13,22 +13,17 @@ class Program
         $builder = WebHost::createDefaultBuilder($args);
         $configuration = $builder->Configuration;
 
-        $builder->register(function ($services) {
-            // services
+        $builder->register(function ($services) use ($configuration) {
+            // Services
         });
 
         $host = $builder->build();
 
-        $host->start(function ($app) use ($configuration) {
-            if ($configuration->getValue('environment') == 'development') {
-                $app->UseExceptionHandler();
-            } else {
-                $app->UseExceptionHandler("/home/error");
-            }
-
+        $host->start(function ($app) {
+            // Middlewares
             $app->useRouter();
-            // middlewares
             $app->useEndpoint(function ($routes) {
+                // Routes
                 $routes->mapGet("/", fn () => "Hello World!");
             });
         });
