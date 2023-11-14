@@ -24,7 +24,7 @@ use DevNet\System\IO\FileException;
 use DevNet\System\IO\FileMode;
 use DevNet\System\IO\FileStream;
 use DevNet\System\Runtime\ClassLoader;
-use DirectoryIterator;
+use DOMDocument;
 use ReflectionClass;
 
 class AddCommand extends CommandLine implements ICommandHandler, ICodeGenerator
@@ -96,23 +96,23 @@ class AddCommand extends CommandLine implements ICommandHandler, ICodeGenerator
         $sourceRoot  = getcwd();
         $projectPath = $sourceRoot . '/devnet.proj';
 
-        // gets root namespace from the project file and the source route related to the entrypoint location.
+        // Gets root namespace from the project file and the source route related to the entrypoint location.
         if (is_file($projectPath)) {
-            $projectFile = simplexml_load_file($projectPath);
-            if ($projectFile) {
-                $prefix = $projectFile->Properties->RootNamespace ?? $prefix;
-                $startupObject = $projectFile->Properties->StartupObject ?? 'Application\\Program';
-                $loader = new ClassLoader($sourceRoot);
-                foreach (new DirectoryIterator($sourceRoot) as $dir) {
-                    if ($dir->isDir() && !str_starts_with($dir->getFilename(), '.')) {
-                        $loader->map($prefix, '/' . $dir);
-                    }
-                }
+            $dom = new DOMDocument();
+            $result = $dom->load($projectPath);
+            if ($result) {
+                $rootNamespace = $dom->getElementsByTagName('RootNamespace')->item(0);
+                $prefix = $rootNamespace ? $rootNamespace->textContent : 'Application';
+                $startupObject = $dom->getElementsByTagName('StartupObject')->item(0);
+                $mainClass = $startupObject ? $startupObject->textContent : 'Application\\Program';
 
+                $loader = new ClassLoader($sourceRoot);
+                $loader->map('/');
                 $loader->register();
-                if (class_exists($startupObject)) {
-                    $entryPointClass = new ReflectionClass((string)$startupObject);
-                    $sourceRoot = dirname($entryPointClass->getFileName());
+
+                if (class_exists($mainClass)) {
+                    $mainClass = new ReflectionClass($mainClass);
+                    $sourceRoot = dirname($mainClass->getFileName());
                 }
             }
         }
@@ -154,7 +154,7 @@ class AddCommand extends CommandLine implements ICommandHandler, ICodeGenerator
         $name      = $parameters['--name'] ?? 'MyClass';
         $output    = $parameters['--output'] ?? '';
         $namespace = $parameters['--prefix'] ?? 'Application';
-        $namespace = $namespace .'\\' . str_replace('/', '\\', $output);
+        $namespace = $namespace . '\\' . str_replace('/', '\\', $output);
         $namespace = trim($namespace, '\\');
 
         $content = new StringBuilder();
