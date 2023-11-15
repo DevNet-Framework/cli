@@ -2,6 +2,8 @@
 <Project>
   <Properties>
     <StartupObject>Application\Program</StartupObject>
-    <RootNamespace>Application</RootNamespace>
   </Properties>
+  <Items>
+    <CodeFile include="vendor/autoload.php"/>
+  </Items>
 </Project>
