@@ -1,9 +1,9 @@
 # DevNet Console Template
-This package is a Console application template of DevNet Framewark.
+This package is a Console application template of DevNet Framework.
 
 ## Requirements
-- PHP 7.4 or higher version from [php.net](https://www.php.net/)
-- Composer the dependency manager from [getcomposer.org](https://getcomposer.org/)
+- [PHP](https://www.php.net/) version 8.1 or higher
+- [Composer](https://getcomposer.org/) version 2.0 or higher
 
 ## Installation
 To create a DevNet Console Application project using composer, run the following command in your terminal:

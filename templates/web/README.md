@@ -2,8 +2,8 @@
 This package is a minimal web API template of DevNet Framework, which is suitable for building microservices.
 
 ## Requirements
-- PHP 7.4 or higher version from [php.net](https://www.php.net/)
-- Composer the dependency manager from [getcomposer.org](https://getcomposer.org/)
+- [PHP](https://www.php.net/) version 8.1 or higher
+- [Composer](https://getcomposer.org/) version 2.0 or higher
 
 ## Installation
 To create a DevNet minimal Web API project using composer, run the following command in your terminal:
