@@ -5,7 +5,7 @@
         }
     },
     "Database": {
-        "ProviderType": "DevNet\\Entity\\MySql\\MySqlDataProvider",
-        "ConnectionString": "//username:password@127.0.0.1/database"
+        "ProviderType": "DevNet\\Entity\\PgSql\\PgSqlDataProvider",
+        "ConnectionString": "host=localhost;database=dbname;user=username;password=password"
     }
 }
