@@ -11,14 +11,11 @@ class Program
     public static function main(array $args = [])
     {
         $builder = WebHost::createDefaultBuilder($args);
-        $configuration = $builder->Configuration;
-
-        $builder->register(function ($services) use ($configuration) {
+        $builder->register(function ($services) {
             // Services
         });
 
         $host = $builder->build();
-
         $host->start(function ($app) {
             // Middlewares
             $app->useRouter();
