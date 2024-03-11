@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "devnet/core": "1.0.*"
+        "devnet/system": "1.1.*"
     },
     "bin": [
         "bin/devnet"
