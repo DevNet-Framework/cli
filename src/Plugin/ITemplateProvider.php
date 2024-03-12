@@ -7,22 +7,22 @@
  * @link        https://github.com/DevNet-Framework
  */
 
-namespace DevNet\Cli\Templating;
+namespace DevNet\CLI\Plugin;
 
-interface ICodeGeneratorProvider
+interface ITemplateProvider
 {
     /**
-     * Get the generator name
+     * Get the template name
      */
     public function getName(): string;
 
     /**
-     * Get the generator description
+     * Get the template description
      */
     public function getDescription(): string;
 
     /**
-     * Get the code generator
+     * Get the template source path
      */
-    public function getGenerator(): ICodeGenerator;
+    public function getSourcePath(): string;
 }

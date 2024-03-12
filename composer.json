@@ -17,7 +17,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "DevNet\\Cli\\": "src/"
+            "DevNet\\CLI\\": "src/"
         }
     }
 }

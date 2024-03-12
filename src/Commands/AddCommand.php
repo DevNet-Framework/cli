@@ -7,12 +7,12 @@
  * @link        https://github.com/DevNet-Framework
  */
 
-namespace DevNet\Cli\Commands;
+namespace DevNet\CLI\Commands;
 
-use DevNet\Cli\Templating\CodeGeneratorProvider;
-use DevNet\Cli\Templating\CodeGeneratorRegistry;
-use DevNet\Cli\Templating\CodeModel;
-use DevNet\Cli\Templating\ICodeGenerator;
+use DevNet\CLI\Plugin\CodeGeneratorProvider;
+use DevNet\CLI\Plugin\CodeGeneratorRegistry;
+use DevNet\CLI\Plugin\CodeModel;
+use DevNet\CLI\Plugin\ICodeGenerator;
 use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
 use DevNet\System\Command\ICommandHandler;

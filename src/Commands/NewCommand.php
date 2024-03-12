@@ -7,10 +7,10 @@
  * @link        https://github.com/DevNet-Framework
  */
 
-namespace DevNet\Cli\Commands;
+namespace DevNet\CLI\Commands;
 
-use DevNet\Cli\Templating\TemplateProvider;
-use DevNet\Cli\Templating\TemplateRegistry;
+use DevNet\CLI\Plugin\TemplateProvider;
+use DevNet\CLI\Plugin\TemplateRegistry;
 use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
 use DevNet\System\Command\ICommandHandler;

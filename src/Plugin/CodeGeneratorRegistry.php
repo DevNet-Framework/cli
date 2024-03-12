@@ -7,18 +7,18 @@
  * @link        https://github.com/DevNet-Framework
  */
 
-namespace DevNet\Cli\Templating;
+namespace DevNet\CLI\Plugin;
 
-use DevNet\Cli\Commands\AbstractRegistry;
+use DevNet\CLI\Commands\AbstractRegistry;
 
-class TemplateRegistry extends AbstractRegistry
+class CodeGeneratorRegistry extends AbstractRegistry
 {
-    private static ?TemplateRegistry $instance = null;
+    private static ?CodeGeneratorRegistry $instance = null;
 
     public static function getSingleton(): static
     {
         if (!static::$instance) {
-            static::$instance = new TemplateRegistry(ITemplateProvider::class);
+            static::$instance = new CodeGeneratorRegistry(ICodeGeneratorProvider::class);
         }
 
         return static::$instance;

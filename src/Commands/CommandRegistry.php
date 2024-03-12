@@ -7,7 +7,7 @@
  * @link        https://github.com/DevNet-Framework
  */
 
-namespace DevNet\Cli\Commands;
+namespace DevNet\CLI\Commands;
 
 use DevNet\System\Command\CommandLine;
 

@@ -3,7 +3,7 @@
 
 require __DIR__ . '/../../../../vendor/autoload.php';
 
-use DevNet\Cli\Program;
+use DevNet\CLI\Program;
 
 $args = $GLOBALS['argv'];
 array_shift($args);

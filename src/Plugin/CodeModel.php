@@ -7,7 +7,7 @@
  * @link        https://github.com/DevNet-Framework
  */
 
-namespace DevNet\Cli\Templating;
+namespace DevNet\CLI\Plugin;
 
 class CodeModel
 {
