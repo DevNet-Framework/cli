@@ -29,8 +29,15 @@ class NewCommand extends CommandLine implements ICommandHandler
         $this->addOption('--output', 'Location to place the generated project output', '-o');
 
         $this->registry = TemplateRegistry::getSingleton();
-        $this->registry->set('console', new TemplateProvider('console', 'Console application.', __DIR__ . '/../../templates/console'));
-        $this->registry->set('web', new TemplateProvider('web', 'DevNet web application.', __DIR__ . '/../../templates/web'));
+        $this->registry->set('console', new TemplateProvider(dirname(__DIR__, 3) . '/console'));
+
+        if (is_file(dirname(__DIR__, 3) . '/web/composer.json')) {
+            $this->registry->set('web', new TemplateProvider(dirname(__DIR__, 3) . '/web'));
+        }
+
+        if (is_file(dirname(__DIR__, 3) . '/mvc/composer.json')) {
+            $this->registry->set('mvc', new TemplateProvider(dirname(__DIR__, 3) . '/mvc'));
+        }
 
         $this->setHelp(function ($builder) {
             $builder->useDefaults();
@@ -72,7 +79,7 @@ class NewCommand extends CommandLine implements ICommandHandler
         $templateName = strtolower($templateName);
         $provider     = $this->registry->get($templateName);
 
-        if (!$provider || !is_dir($provider->getSourcePath())) {
+        if (!$provider || !is_dir($provider->getPath())) {
             Console::$ForegroundColor = ConsoleColor::Red;
             Console::writeLine("The template {$templateName} does not exist!");
             Console::resetColor();
@@ -92,20 +99,20 @@ class NewCommand extends CommandLine implements ICommandHandler
         }
     }
 
-    public static function createProject(string $src, string $dst): bool
+    public static function createProject(string $source, string $destination): bool
     {
         try {
-            $dir = opendir($src);
-            if (!is_dir($dst)) {
-                mkdir($dst, 0777, true);
+            $dir = opendir($source);
+            if (!is_dir($destination)) {
+                mkdir($destination, 0777, true);
             }
 
             while ($file = readdir($dir)) {
                 if ($file !== '.' && $file !== '..' && $file !== '.git') {
-                    if (is_dir($src . '/' . $file)) {
-                        self::createProject($src . '/' . $file, $dst . '/' . $file);
+                    if (is_dir($source . '/' . $file)) {
+                        self::createProject($source . '/' . $file, $destination . '/' . $file);
                     } else {
-                        copy($src . '/' . $file, $dst . '/' . $file);
+                        copy($source . '/' . $file, $destination . '/' . $file);
                     }
                 }
             }

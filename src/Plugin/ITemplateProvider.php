@@ -24,5 +24,5 @@ interface ITemplateProvider
     /**
      * Get the template source path
      */
-    public function getSourcePath(): string;
+    public function getPath(): string;
 }

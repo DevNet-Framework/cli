@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<Project>
-  <Properties>
-    <StartupObject>Application\Program</StartupObject>
-  </Properties>
-  <Items>
-    <CodeFile include="vendor/autoload.php"/>
-  </Items>
-</Project>

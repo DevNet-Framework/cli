@@ -1,8 +1,0 @@
-{
-    "name": "devnet/web-template",
-    "description": "Web Application",
-    "type": "project",
-    "license": "MIT",
-    "minimum-stability": "dev",
-    "prefer-stable": true
-}

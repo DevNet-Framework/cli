@@ -1,8 +1,0 @@
-{
-    "name": "devnet/console-template",
-    "description": "Console Application",
-    "type": "project",
-    "license": "MIT",
-    "minimum-stability": "dev",
-    "prefer-stable": true
-}

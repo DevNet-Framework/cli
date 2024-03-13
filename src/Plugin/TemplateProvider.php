@@ -13,13 +13,33 @@ class TemplateProvider implements ITemplateProvider
 {
     protected string $name;
     protected string $description;
-    protected string $sourcePath;
+    protected string $path;
 
-    public function __construct(string $name, string $description, string $sourcePath)
+    public function __construct(string $sourcePath)
     {
-        $this->name = $name;
-        $this->description = $description;
-        $this->sourcePath = $sourcePath;
+        $this->path = $sourcePath;
+        if (!is_file($sourcePath . "/composer.json")) {
+            throw new \Exception("Cannot find 'composer.json' in the template path : " . $sourcePath);
+        }
+
+        $content = file_get_contents($sourcePath . "/composer.json");
+        $package = json_decode($content);
+        
+        if (!isset($package->name)) {
+            throw new \Exception("The template package name is mission in : " . $sourcePath . "/composer.json");
+        }
+
+        $segments = explode('/', $package->name);
+        if (count($segments) != 2) {
+            throw new \Exception("The template package name has an invalid format in : " . $sourcePath . "/composer.json");
+        }
+
+        if (!isset($package->description)) {
+            throw new \Exception("The template package description is mission in : " > $sourcePath . "/composer.json");
+        }
+
+        $this->name = $segments[1];
+        $this->description = $package->description;
     }
 
     /**
@@ -41,8 +61,8 @@ class TemplateProvider implements ITemplateProvider
     /**
      * Get the template source path
      */
-    public function getSourcePath(): string
+    public function getPath(): string
     {
-        return  $this->sourcePath;
+        return  $this->path;
     }
 }

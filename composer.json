@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "devnet/system": "1.1.*"
+        "devnet/system": "1.1.*",
+        "devnet/console": "1.1.*"
     },
     "bin": [
         "bin/devnet"
