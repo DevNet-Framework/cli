@@ -2,23 +2,17 @@
 This dependency is a part of **DevNet Framework**, a command-line Interface tool, for managing DevNet projects.
 
 ## Requirements
-- [DevNet Core](https://github.com/DevNet-Framework/core/) version 1.0
+- [PHP](https://www.php.net/) version 8.1 or higher
 - [Composer](https://getcomposer.org/) version 2.0 or higher
 
-## Installation
-To install DevNet CLI in your project, run the following command in the terminal:
-```
-composer require devnet/cli
-```
->**Note:** This is the minimal installation of DevNet Framework that allows you to create a console app only, but you can add other DevNet packages later, like devnet/web package to be able to create a web app.
+>**Note:** If you are using composer on a Linux operating system, please make sure that you have added the path "composer/vendor/bin" to the system environment variables in the ".bashrc" file as follows:  
+>`echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' >> ~/.bashrc`
 
-You can install DevNet CLI globally in your system, by run the following command in the terminal:
+## Installation
+It's recommended that you install DevNet CLI globally in your system, by run the following command in the terminal:
 ```
 composer global require devnet/cli
 ```
-
->**Note:** In order to run DevNet CLI globally in linux os, you need to add composer **bin** into the system environment variables.  
->`echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' >> ~/.bashrc`
 
 ## Usage
 To show help on how to use **DevNet Command Line**, run the following option in your terminal:
