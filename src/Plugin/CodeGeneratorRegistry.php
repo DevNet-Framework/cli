@@ -9,8 +9,6 @@
 
 namespace DevNet\CLI\Plugin;
 
-use DevNet\CLI\Commands\AbstractRegistry;
-
 class CodeGeneratorRegistry extends AbstractRegistry
 {
     private static ?CodeGeneratorRegistry $instance = null;

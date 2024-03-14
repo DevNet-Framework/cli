@@ -7,7 +7,7 @@
  * @link        https://github.com/DevNet-Framework
  */
 
-namespace DevNet\CLI\Commands;
+namespace DevNet\CLI\Plugin;
 
 use DevNet\System\Collections\Enumerator;
 use DevNet\System\Collections\IEnumerable;
@@ -29,12 +29,14 @@ abstract class AbstractRegistry implements IEnumerable
     /**
      * @param object|string $service object or class name of the injected service
      */
-    public function set(string $name, $service): void
+    public function set(string $name, string|object $service): void
     {
         if (is_string($service)) {
-            $this->classes[$name] = $service;
+            if (is_subclass_of($service, $this->type->Name) || $service == $this->type->Name) {
+                $this->classes[$name] = $service;
+            }
         } else if (is_object($service)) {
-            if ($this->type->isTypeOf($service)) {
+            if (is_subclass_of($service, $this->type->Name) || $service::class == $this->type->Name) {
                 $this->objects[$name] = $service;
             }
         }
@@ -50,10 +52,8 @@ abstract class AbstractRegistry implements IEnumerable
         $class = $this->classes[$name] ?? '';
         if (class_exists($class)) {
             $object = new $class();
-            if ($this->type->isTypeOf($object)) {
-                $this->objects[$name] = $object;
-                return $object;
-            }
+            $this->objects[$name] = $object;
+            return $object;
         }
 
         return null;

@@ -9,8 +9,6 @@
 
 namespace DevNet\CLI\Plugin;
 
-use DevNet\CLI\Commands\AbstractRegistry;
-
 class TemplateRegistry extends AbstractRegistry
 {
     private static ?TemplateRegistry $instance = null;

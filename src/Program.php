@@ -12,7 +12,7 @@ namespace DevNet\CLI;
 use DevNet\CLI\Commands\AddCommand;
 use DevNet\CLI\Commands\NewCommand;
 use DevNet\CLI\Commands\RunCommand;
-use DevNet\CLI\Commands\CommandRegistry;
+use DevNet\CLI\Plugin\CommandRegistry;
 use DevNet\System\Command\CommandEventArgs;
 use DevNet\System\Command\CommandLine;
 use DevNet\System\IO\ConsoleColor;
