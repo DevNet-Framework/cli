@@ -86,7 +86,7 @@ class NewCommand extends CommandLine implements ICommandHandler
             return;
         }
 
-        $result = self::createProject($provider->getSourcePath(), $destination);
+        $result = self::createProject($provider->getPath(), $destination);
 
         if ($result) {
             Console::$ForegroundColor = ConsoleColor::Green;
