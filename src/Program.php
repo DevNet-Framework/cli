@@ -32,7 +32,7 @@ class Program
         $rootCommand->setHandler(function (object $sender, CommandEventArgs $args): void {
             $version = $args->get('--version');
             if ($version) {
-                Console::writeLine("DevNet CLI: 1.0.0");
+                Console::writeLine("DevNet CLI: " . static::getVersion());
                 return;
             }
 
@@ -52,5 +52,17 @@ class Program
         $rootCommand->addCommand(new RunCommand());
 
         $rootCommand->invoke($args);
+    }
+
+    public static function getVersion(): string
+    {
+        $json = json_decode(file_get_contents(dirname(__DIR__, 4). "/vendor/composer/installed.json"));
+        foreach ($json->packages as $package) {
+            if ($package->name == "devnet/cli") {
+                return $package->version;
+            }
+        }
+
+        return "0.0.0";
     }
 }
